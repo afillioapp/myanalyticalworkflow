@@ -1,9 +1,11 @@
 # BSA Lifecycle: Phases with IDs
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 Source: research/Deep Research/chatgpt-research.md, sections 2 to 26. Phase names and content are from that document. The PH IDs are assigned here so other files can reference them.
 
 Use these IDs everywhere. A pain point says which phase it occurs in. A feature says which phase it serves. That is what makes the matrix in traceability.md work.
+
+The steps inside each phase have their own IDs, in `structure/structure-coverage.md`. ST-01-02 is PH-01, step 2. That register records whether the app covers each step, and is owned by the Structure agent.
 
 ## The eleven stages
 

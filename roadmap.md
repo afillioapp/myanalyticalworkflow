@@ -1,8 +1,10 @@
 # Roadmap
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 Pattern: this is the Planning pattern artifact described in rules/rules.md rule 8 and the Tech Lead agent stub. The plan is data, not prose: every phase names what gets built, what proves it works, and what unlocks the next one.
 Re-plan at the checkpoint after P4, not only on failure.
+
+**Standing gate, added 2026-10-28.** Before any phase exits, the Structure agent runs the BSA structure phases that phase touches, and every row in `structure/structure-coverage.md` for them has a status. A gap is allowed through only once Alireza has decided it: build it, defer it, or Out of scope with a reason. Rule 15.
 
 ---
 
@@ -132,6 +134,7 @@ Nothing now blocks P0.
 
 **Build.**
 - Intake with the prior-work check: query the graph and request history for related requirements, prior decisions and unresolved issues on the touched nodes.
+- Request trigger selection, F-35: one question, one choice from the seven triggers in ST-01-02.
 - Symptom, cause hypothesis, evidence and proposed solution captured as four separate things.
 - Success measures with baselines, recorded but not yet tracked.
 - Both intake modes: business request, and external mandate with obligation extraction.
@@ -149,6 +152,8 @@ Nothing now blocks P0.
 6. Quality Gate Control blocks on a deterministic failure and never on a judgment call, per its authority limit.
 7. Impact traversal on a 300-node model returns in under two seconds.
 8. Questions are presented one at a time in priority order. No screen in P4 asks for more than one decision and no screen is a form. Checked against DNA/dna.md.
+9. Every request records its trigger, and the trigger screen asks for that one choice only.
+10. Every PH-01 row in the structure coverage register has a status, and every PH-01 gap has a decision.
 
 **Exit gate.** This is the demo. If P4 passes, the product thesis is proven and the rest is execution.
 

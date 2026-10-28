@@ -1,7 +1,7 @@
 # BSA Tool: Design Spec
 
 Status: brainstorm consolidated, pre-build
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 Companion file: bsa-practice-brief.md (real-world practice input, separate source)
 
 ---
@@ -217,7 +217,11 @@ Build single-branch now and adding options later means rewriting the diff engine
 ## 6. The flow
 
 1. **Onboarding.** Either upload documents and have AI extract nodes and edges, or answer a guided question set, or both. User reviews and corrects in an approval queue. The question set is generated from taxonomy gaps, so it only ever asks what is actually missing.
-2. **Intake.** Opens with a prior-work check: query the graph and the request history for related requirements, prior decisions and unresolved issues on the nodes this request touches. Has this been asked before, and what was decided. Then two modes, and the modes matter.
+2. **Intake.** Opens with a prior-work check: query the graph and the request history for related requirements, prior decisions and unresolved issues on the nodes this request touches. Has this been asked before, and what was decided.
+
+   Then one question: **what triggered this request?** One choice from seven: customer problem, regulatory change, operational inefficiency, system replacement, new product, audit finding, defect. Source: the BSA structure document, PH-01 step 2 (ST-01-02). Feature F-35. It is a single decision on its own screen, per DNA-03.
+
+   Then two modes, and the modes matter.
 
    Intake captures three separate things, never one: the **Symptom** observed, the **CauseHypothesis** behind it, and the **ProposedSolution** someone asked for. The hypothesis stays a hypothesis until Evidence supports it, and the proposed solution is never assumed correct because a stakeholder requested it. Most bad analysis starts by collapsing these three into "the ask".
    - *Business request:* a stakeholder wants something. Intake asks which parts of the existing graph it touches, not for a description of the world.
@@ -241,7 +245,7 @@ Each phase has an **exit condition**. The CTA stays locked until it is met. The 
 
 | Phase | Closes when | CTA |
 |---|---|---|
-| Intake | Prior-work check run; request classified as business request or mandate; sponsor named; touched nodes tagged; symptom, cause hypothesis and proposed solution recorded separately; success measures named with their baseline where one exists | Run impact analysis |
+| Intake | Prior-work check run; trigger recorded; request classified as business request or mandate; sponsor named; touched nodes tagged; symptom, cause hypothesis and proposed solution recorded separately; success measures named with their baseline where one exists | Run impact analysis |
 | Impact analysis | Every impacted node addressed or marked not applicable, stakeholders identified | Prepare discovery |
 | Discovery session | All generated questions answered, assumptions logged, glossary terms resolved | Define solution options |
 | Options | Two or more options with trade-offs, one recommended | Build the to-be |
@@ -447,6 +451,8 @@ Still live work for carriers, because in-force contracts renew with their existi
 - Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general.
 - Whether SuccessMeasure tracking stays out of v1 or earns its way in. Section 6d records the measures but does nothing with them.
 - Whether field mapping or a canonical data model represents DataField mappings. See section 4c.
+- Request trigger (F-35): can a request have more than one trigger, for example a regulatory change that also exposes a defect? Is there an "other" choice? Does a regulatory change route straight to mandate mode, and does an audit finding?
+- PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no Constraint node type, no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
 - Coverage indicator states. Addressed, not applicable and blocked are three states, not two. The BSA process document tracks blocked tests separately from failed ones for the same reason.
 
 ---

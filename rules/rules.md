@@ -1,6 +1,6 @@
 # Project Rules
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 
 Two sections. Section A is stated directly by Alireza. Section B is adopted from the Agentic Design Patterns guide (BASWE, 2026) and approved on 2026-10-26. Nothing in this file is inferred without being labelled.
 
@@ -24,7 +24,7 @@ The architecture must make it easy to add or remove features. No design choice t
 
 The application is agent-based, not a single monolithic AI call.
 
-**Scope settled 2026-10-26: every agent builds the product. They are not product features.** Tech Lead, Developer, Quality Gate Control, Learner, Content Manager, Copy Writer and UI UX Manager are the team that constructs the app. Nothing in `agents/` runs for an end user.
+**Scope settled 2026-10-26: every agent builds the product. They are not product features.** Tech Lead, Developer, Quality Gate Control, Learner, Content Manager, Copy Writer, UI UX Manager and Structure are the team that constructs the app. Structure was added 2026-10-28, see rule 15. Nothing in `agents/` runs for an end user.
 
 Consequence: the Learner records learnings about building this app, stored in the repo, not per-tenant learnings about a customer's business. Quality Gate Control reviews our work, not the user's.
 
@@ -106,6 +106,16 @@ The governing one is **one thing at a time**. BSA is a broad job and the analyst
 
 A feature that breaks a DNA principle is wrong even if it works. Quality Gate Control checks against that file, and each principle there has a yes-or-no test so the check stays deterministic.
 
+## 15. Nothing in the BSA structure is overlooked
+
+Stated by Alireza, 2026-10-28.
+
+`research/Deep Research/chatgpt-research.md` is the comprehensive BSA workflow, and the app is checked against it. Every step, output and checkpoint in it gets an ID and a status in `structure/structure-coverage.md`: covered by a feature, partly covered, a gap, or out of scope with a recorded reason.
+
+The Structure agent owns that register and is in charge of nothing else. It reports gaps and may propose features, but only Alireza decides scope. See `agents/structure/structure.md`.
+
+A feature is justified by a pain point ID or by an ST ID from the register. The first feature justified this way is F-35, request trigger selection, from ST-01-02.
+
 ## Folder structure
 
 ```
@@ -116,6 +126,7 @@ My Analytical Work Flow/
     dna.md
   structure/
     bsa-lifecycle-phases.md
+    structure-coverage.md
   pain-points/
     pain-points.md
   research/
@@ -127,6 +138,8 @@ My Analytical Work Flow/
     content-manager/
     copy-writer/
     ui-ux-manager/
+    structure/
+  product/
   roadmap.md
   traceability.md
   bsa-tool-design-spec.md
@@ -135,4 +148,4 @@ My Analytical Work Flow/
 
 ## Open
 
-Rule 4 says there are multiple agents. Two are named: Quality Gate Control and Learner. The rest are not yet defined and are deliberately not invented here.
+Rule 4 says there are multiple agents. Eight are named. Quality Gate Control, Learner, Content Manager and Structure have a stated purpose. Tech Lead, Developer, Copy Writer and UI UX Manager are named only, and their purpose is deliberately not invented here.

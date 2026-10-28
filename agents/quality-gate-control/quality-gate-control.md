@@ -1,6 +1,6 @@
 # Agent: Quality Gate Control
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 Status: shape decided. Check list not yet complete.
 
 ---
@@ -41,6 +41,7 @@ Most of what this agent checks is a graph query, not a judgment. Run those first
 - Nodes marked not applicable with no reason recorded.
 - Nodes relied on that are AI-extracted and never human-verified.
 - Broken trace links. A reference to a node ID that no longer exists.
+- Structure coverage. Added 2026-10-28, rule 15. A row in `structure/structure-coverage.md` for a phase being exited has no status, or is a gap with no decision recorded. The Structure agent produces the register; this agent enforces it.
 
 **Model critic, runs only after the deterministic checks pass:**
 

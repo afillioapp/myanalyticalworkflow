@@ -1,12 +1,14 @@
 # Traceability: Feature to Pain Point to Phase to Area
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 
 This is the file that answers the question: which feature addresses which pain point, in which part of the app, and how.
 
 It is deliberately the same pattern the product itself uses. Features are objects with IDs, pain points are objects with IDs, and this is the matrix. If a feature has no pain point, it needs justifying or cutting. If a pain point has no feature, it is unaddressed and that should be a deliberate choice.
 
-References: PP from pain-points/pain-points.md. PH from structure/bsa-lifecycle-phases.md. Design detail in bsa-tool-design-spec.md.
+References: PP from pain-points/pain-points.md. PH from structure/bsa-lifecycle-phases.md. ST from structure/structure-coverage.md. Design detail in bsa-tool-design-spec.md.
+
+The structure coverage register is the reverse view of this file. This file asks which pain point each feature answers. The register asks whether every step of the BSA process has a feature. Owned by the Structure agent, `agents/structure/structure.md`.
 
 ## App areas
 
@@ -65,6 +67,7 @@ References: PP from pain-points/pain-points.md. PH from structure/bsa-lifecycle-
 | F-32 Workaround capture in as-is | MODEL | PH-06 | PP-18 | The model holds how work actually happens, not only the official process |
 | F-33 Overview tab | OVERVIEW | All | PP-02 | One place showing every active request, its phase and its next action, so nothing is rediscovered |
 | F-34 Analytical tab | ANALYTICS | PH-04, PH-24 | PP-07 | Cycle time, questions caught before build, coverage at sign off. Gives the analyst evidence of their own impact |
+| F-35 Request trigger selection | INTAKE | PH-01 | None. Justified by ST-01-02, see below | One question at intake: what triggered this? The analyst picks one of seven: customer problem, regulatory change, operational inefficiency, system replacement, new product, audit finding, defect |
 
 ## Unaddressed pain points
 
@@ -80,11 +83,17 @@ Deliberate, with the reason.
 
 ## Features with no pain point behind them
 
-None currently. Any feature added later that cannot name a pain point ID in this table needs justifying or cutting.
+A feature with no pain point is justified when it covers a step of the BSA process in the structure register. That is the second valid justification, alongside a pain point ID.
+
+| Feature | Justification |
+|---|---|
+| F-35 Request trigger selection | ST-01-02. The source makes establishing the trigger the second step of initiation. Proposed by Alireza 2026-10-28 while reading PH-01 |
+
+Any other feature that can name neither a pain point ID nor an ST ID needs justifying or cutting.
 
 ## How to use this file
 
 1. New pain point found: add it to pain-points/pain-points.md with a source, then check whether any feature covers it.
-2. New feature proposed: it must name at least one PP ID here, or go in the unjustified list.
+2. New feature proposed: it must name at least one PP ID or ST ID here, or go in the unjustified list. Then the Structure agent updates any register rows it covers.
 3. Build prioritisation: count pain points per feature, weighted by how well evidenced each one is. F-21, F-11 and F-17 carry the most weight on that basis.
 4. Pitching: the pain point IDs give every claim a citation, which matters because most published statistics in this space have no source.
