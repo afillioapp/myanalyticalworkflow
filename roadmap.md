@@ -4,7 +4,7 @@ Last updated: 2026-10-28
 Pattern: this is the Planning pattern artifact described in rules/rules.md rule 8 and the Tech Lead agent stub. The plan is data, not prose: every phase names what gets built, what proves it works, and what unlocks the next one.
 Re-plan at the checkpoint after P4, not only on failure.
 
-**Standing gate, added 2026-10-28.** Before any phase exits, the Structure agent runs the BSA structure phases that phase touches, and every row in `structure/structure-coverage.md` for them has a status. A gap is allowed through only once Alireza has decided it: build it, defer it, or Out of scope with a reason. Rule 15.
+**Standing gate, added 2026-10-28.** Before any phase exits, the Structure agent runs the BSA structure phases that phase touches, and every row in `structure/structure-coverage.md` for them has an outcome and a status. Each phase's outcome must be one the app records (rule 16). A gap is allowed through only once Alireza has decided it: build it, defer it, or Out of scope with a reason. Rule 15.
 
 ---
 

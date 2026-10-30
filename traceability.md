@@ -8,7 +8,7 @@ It is deliberately the same pattern the product itself uses. Features are object
 
 References: PP from pain-points/pain-points.md. PH from structure/bsa-lifecycle-phases.md. ST from structure/structure-coverage.md. Design detail in bsa-tool-design-spec.md.
 
-The structure coverage register is the reverse view of this file. This file asks which pain point each feature answers. The register asks whether every step of the BSA process has a feature. Owned by the Structure agent, `agents/structure/structure.md`.
+The structure coverage register is the reverse view of this file. This file asks which pain point each feature answers. The register asks whether every step of the BSA process has a feature that records its outcome. Owned by the Structure agent, `agents/structure/structure.md`.
 
 ## App areas
 

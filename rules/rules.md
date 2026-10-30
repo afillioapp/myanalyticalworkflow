@@ -116,6 +116,20 @@ The Structure agent owns that register and is in charge of nothing else. It repo
 
 A feature is justified by a pain point ID or by an ST ID from the register. The first feature justified this way is F-35, request trigger selection, from ST-01-02.
 
+## 16. Every step has an outcome
+
+Stated by Alireza, 2026-10-28. Example material: `research/Deep Research/bsa-stage-outcomes.md`.
+
+Each phase, and each step inside it, ends in an outcome: something that exists once it is done, such as a recorded answer, a node or a document. Questions are how the outcome is reached. The outcome is how the gate knows the step is finished. Doing the activity is not the outcome.
+
+Consequences:
+
+- Every phase in `structure/bsa-lifecycle-phases.md` names its outcome. Where neither source states one, it is marked and decided by Alireza, never invented.
+- Every row in `structure/structure-coverage.md` names its outcome. Covered means the app records that outcome.
+- Every phase gate in design spec section 6b closes on the outcomes of the phases it covers.
+
+Five questions apply at any phase: What should happen? What happens today? What needs to change, and why? How do we prove it works? What could go wrong?
+
 ## Folder structure
 
 ```
@@ -127,6 +141,10 @@ My Analytical Work Flow/
   structure/
     bsa-lifecycle-phases.md
     structure-coverage.md
+  research/
+    Deep Research/
+      chatgpt-research.md
+      bsa-stage-outcomes.md
   pain-points/
     pain-points.md
   research/

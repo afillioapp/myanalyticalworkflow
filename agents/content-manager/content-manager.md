@@ -17,7 +17,7 @@ Named as an agent by Alireza on 2026-10-26, under project rule 4.
 
 The documentation set now cross-references itself: PP ids in pain-points, PH ids in structure, F ids in traceability, phase gates in the spec, decisions in the roadmap. A decision changed in one place goes stale in four others. That drift is this agent's job.
 
-Concretely, it should catch: a feature in traceability.md with no pain point id and no ST id; a pain point with no source; a spec decision that contradicts the roadmap; an open item that a later decision already closed; a rule adopted but never applied in the spec.
+Concretely, it should catch: a feature in traceability.md with no pain point id and no ST id; a phase with no outcome; a pain point with no source; a spec decision that contradicts the roadmap; an open item that a later decision already closed; a rule adopted but never applied in the spec.
 
 ### Boundary with the Structure agent
 

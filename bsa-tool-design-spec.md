@@ -243,20 +243,22 @@ The app is a rail, not a toolbox. Tabs let a user wander and skip. A rail shows 
 
 Each phase has an **exit condition**. The CTA stays locked until it is met. The gate is the coverage indicator from section 2.
 
-| Phase | Closes when | CTA |
-|---|---|---|
-| Intake | Prior-work check run; trigger recorded; request classified as business request or mandate; sponsor named; touched nodes tagged; symptom, cause hypothesis and proposed solution recorded separately; success measures named with their baseline where one exists | Run impact analysis |
-| Impact analysis | Every impacted node addressed or marked not applicable, stakeholders identified | Prepare discovery |
-| Discovery session | All generated questions answered, assumptions logged, glossary terms resolved | Define solution options |
-| Options | Two or more options with trade-offs, one recommended | Build the to-be |
-| To-be | Every impacted node has a defined target state | Generate gap analysis |
-| Gap analysis | Diff reviewed, each gap has an owner | Write the BRD |
-| BRD | Every business requirement traces to an obligation or business driver | Write the FRD |
-| FRD | Every business requirement has at least one functional requirement | Write use cases |
-| Use cases and edge cases | Every decision point has a path, every happy path has a failure path | Write acceptance criteria |
-| Acceptance criteria | Every functional requirement has testable criteria | Generate test scenarios |
-| Traceability review | No orphan requirements, no unaddressed obligations | Send for sign off |
-| Sign off | Recorded | Promote to baseline |
+**Every exit condition is an outcome** (rules rule 16). A phase closes when the outcome exists, not when the activity has happened. The Covers column links each rail phase to the BSA phases whose outcomes it must produce. Outcomes per BSA phase are in `structure/bsa-lifecycle-phases.md`. The mapping is an assessment made 2026-10-28.
+
+| Phase | Covers | Closes when | CTA |
+|---|---|---|---|
+| Intake | PH-01, PH-04 | Prior-work check run; trigger recorded; request classified as business request or mandate; sponsor named; touched nodes tagged; symptom, cause hypothesis and proposed solution recorded separately; success measures named with their baseline where one exists | Run impact analysis |
+| Impact analysis | PH-08 | Every impacted node addressed or marked not applicable, stakeholders identified | Prepare discovery |
+| Discovery session | PH-02, PH-05 | All generated questions answered, assumptions logged, glossary terms resolved | Define solution options |
+| Options | PH-07 | Two or more options with trade-offs, one recommended | Build the to-be |
+| To-be | PH-06 | Every impacted node has a defined target state | Generate gap analysis |
+| Gap analysis | PH-06, PH-08 | Diff reviewed, each gap has an owner | Write the BRD |
+| BRD | PH-11 | Every business requirement traces to an obligation or business driver | Write the FRD |
+| FRD | PH-11 | Every business requirement has at least one functional requirement | Write use cases |
+| Use cases and edge cases | PH-11 | Every decision point has a path, every happy path has a failure path | Write acceptance criteria |
+| Acceptance criteria | PH-11, PH-17 | Every functional requirement has testable criteria | Generate test scenarios |
+| Traceability review | PH-15 | No orphan requirements, no unaddressed obligations | Send for sign off |
+| Sign off | PH-25 | Recorded | Promote to baseline |
 
 ### Impact analysis sits before the discovery session
 
@@ -452,6 +454,8 @@ Still live work for carriers, because in-force contracts renew with their existi
 - Whether SuccessMeasure tracking stays out of v1 or earns its way in. Section 6d records the measures but does nothing with them.
 - Whether field mapping or a canonical data model represents DataField mappings. See section 4c.
 - Request trigger (F-35): can a request have more than one trigger, for example a regulatory change that also exposes a defect? Is there an "other" choice? Does a regulatory change route straight to mandate mode, and does an audit finding?
+- Phase outcomes not stated in either source: PH-05 stakeholder analysis, PH-12 UX, PH-25 documentation and closure. The rail's Discovery session and Sign off phases depend on PH-05 and PH-25.
+- Whether the five any-phase questions (rules rule 16) become a standing question set in F-11, or content for the F-20 teaching panels.
 - PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no Constraint node type, no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
 - Coverage indicator states. Addressed, not applicable and blocked are three states, not two. The BSA process document tracks blocked tests separately from failed ones for the same reason.
 

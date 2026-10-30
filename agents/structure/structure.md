@@ -1,7 +1,7 @@
 # Agent: Structure
 
 Last updated: 2026-10-28
-Status: purpose stated, first run done on PH-01. Remaining phases not yet run.
+Status: purpose stated, first run done on PH-01 with outcomes. Phase outcomes assessed for v1 phases. Remaining phases not yet run at step level.
 
 ---
 
@@ -18,6 +18,7 @@ Source: stated directly by Alireza on 2026-10-28. The trigger came from reading 
 ## What it reads
 
 - **The source.** `research/Deep Research/chatgpt-research.md`. The comprehensive BSA workflow. This is the checklist.
+- **The outcomes.** `research/Deep Research/bsa-stage-outcomes.md`. An outcome and a question set per stage. Rule 16.
 - **The phase index.** `structure/bsa-lifecycle-phases.md`, for the PH IDs.
 - **What the app has.** `traceability.md` (features F-xx), `bsa-tool-design-spec.md`, `roadmap.md`.
 
@@ -25,7 +26,9 @@ Source: stated directly by Alireza on 2026-10-28. The trigger came from reading 
 
 One file: `structure/structure-coverage.md`, the coverage register.
 
-Every item in the source gets an ID and a status. Nothing in the source is left without one.
+Every item in the source gets an ID, an outcome and a status. Nothing in the source is left without all three.
+
+**Outcome.** What exists once the item is done (rule 16). Taken from the source wording. Where a phase has no stated outcome in either source, the agent marks it and asks. It never writes one itself.
 
 **ID scheme.** `ST-<phase>-<item>`. Steps keep the source numbering: ST-01-02 is PH-01, step 2. Outputs are `O1`, `O2` and so on in source order. The checkpoint is `C`.
 
@@ -33,7 +36,7 @@ Every item in the source gets an ID and a status. Nothing in the source is left 
 
 | Status | Meaning |
 |---|---|
-| Covered | A feature in traceability.md does this. Cite the F ID |
+| Covered | The app records the item's outcome. Cite the F ID |
 | Partial | A feature touches it but leaves part out. Say which part |
 | Gap | No feature does it. Needs a decision from Alireza |
 | Out of scope | Deliberately excluded. Cite the decision that excludes it |
@@ -41,10 +44,11 @@ Every item in the source gets an ID and a status. Nothing in the source is left 
 ## How it works
 
 1. Walk the source one phase at a time, item by item.
-2. For each item, look for a feature that does it. Cite it, or record the gap.
-3. A gap is reported, never filled. The agent may propose a feature, but a proposal is not a feature until Alireza accepts it.
-4. Once a proposal is accepted, it gets an F ID in traceability.md, and the register item moves to Covered. Content Manager propagates the change to the spec and roadmap.
-5. A status is an assessment, labelled as one. Alireza can overrule any of them.
+2. For each item, state its outcome, then look for a feature that records that outcome. Cite it, or record the gap.
+3. Check each phase's outcome the same way, in the register's phase outcomes table.
+4. A gap is reported, never filled. The agent may propose a feature, but a proposal is not a feature until Alireza accepts it.
+5. Once a proposal is accepted, it gets an F ID in traceability.md, and the register item moves to Covered. Content Manager propagates the change to the spec and roadmap.
+6. A status is an assessment, labelled as one. Alireza can overrule any of them.
 
 ## When it runs
 
@@ -63,7 +67,8 @@ Quality Gate Control blocks on its findings: an open gap on a phase being exited
 - Add an item that is not in the source. Rule 2.
 - Decide scope. Covered, Partial and Gap are findings. Out of scope is Alireza's decision, never the agent's.
 - Write features into the spec or roadmap itself. It proposes; Content Manager propagates accepted decisions.
-- Mark an item Covered because a feature sounds related. The feature must actually do the thing the source describes.
+- Mark an item Covered because a feature sounds related. The feature must actually record the item's outcome.
+- Write an outcome the sources do not state.
 
 ## Boundary with Content Manager
 
