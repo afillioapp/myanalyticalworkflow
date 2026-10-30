@@ -1,7 +1,7 @@
 # BSA Tool: Design Spec
 
 Status: brainstorm consolidated, pre-build
-Last updated: 2026-10-28
+Last updated: 2026-10-30
 Companion file: bsa-practice-brief.md (real-world practice input, separate source)
 
 ---
@@ -117,6 +117,7 @@ This is the foundational decision. Everything generated downstream is wrong in t
 - Risk, Assumption, Issue, Dependency
 - Decision
 - GlossaryTerm
+- Constraint (budget, date, vendor, regulatory, architecture, privacy, security, capacity). Added 2026-10-30, from structure item ST-01-12
 
 ### Edge types
 
@@ -129,15 +130,17 @@ This is the foundational decision. Everything generated downstream is wrong in t
 | performed_by | ProcessStep | Role |
 | executed_in | ProcessStep | System |
 | precedes | ProcessStep | ProcessStep |
+| part_of | ProcessStep, DecisionPoint, Process | Process. Added 2026-10-30: places a step in its process, and a sub-process in its parent |
 | triggers | any node | Process |
 | reads / writes | System, ProcessStep | DataEntity, DataField |
 | integrates_with | System | System (via Integration) |
 | belongs_to | DataField, Coverage | DataEntity, Product |
 | renders_on | DataField | Form, ProcessStep |
 | governed_by | any node | BusinessRule |
-| derived_from | BusinessRule, Requirement | Obligation, Regulation |
+| derived_from | BusinessRule, Requirement, Obligation | Obligation, Regulation. Obligation as a source added 2026-10-30 |
 | implements | Requirement | change on a node |
 | traces_to | AcceptanceCriterion, TestScenario | Requirement |
+| constrains | Constraint | any node. Added 2026-10-30 |
 | impacts | computed at query time, never stored |
 
 A **handoff** is not a node or a stored edge. It is any edge crossing a department lane. Handoffs are where things break, so the UI should surface them automatically.
@@ -456,7 +459,7 @@ Still live work for carriers, because in-force contracts renew with their existi
 - Request trigger (F-35): can a request have more than one trigger, for example a regulatory change that also exposes a defect? Is there an "other" choice? Does a regulatory change route straight to mandate mode, and does an audit finding?
 - Phase outcomes not stated in either source: PH-05 stakeholder analysis, PH-12 UX, PH-25 documentation and closure. The rail's Discovery session and Sign off phases depend on PH-05 and PH-25.
 - Whether the five any-phase questions (rules rule 16) become a standing question set in F-11, or content for the F-20 teaching panels.
-- PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no Constraint node type, no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
+- PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
 - Coverage indicator states. Addressed, not applicable and blocked are three states, not two. The BSA process document tracks blocked tests separately from failed ones for the same reason.
 
 ---

@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-28
+Last updated: 2026-10-30
 Pattern: this is the Planning pattern artifact described in rules/rules.md rule 8 and the Tech Lead agent stub. The plan is data, not prose: every phase names what gets built, what proves it works, and what unlocks the next one.
 Re-plan at the checkpoint after P4, not only on failure.
 
@@ -20,6 +20,18 @@ Settled 2026-10-26.
 | D4 | Lifecycle boundary | Stays at approved documents and sign off. Success measures and baselines are still captured at intake, per design spec 6d |
 
 Nothing now blocks P0.
+
+## Before P1: decisions
+
+| # | Decision | Answer | Status |
+|---|---|---|---|
+| D5 | How a process step links to its process | New `part_of` edge: ProcessStep, DecisionPoint or Process to Process | Settled and built 2026-10-30 |
+| D6 | How an obligation links to its regulation | `derived_from` widened to allow Obligation to Regulation | Settled and built 2026-10-30 |
+| D7 | Where constraints live | New Constraint node type and `constrains` edge (ST-01-12) | Settled and built 2026-10-30 |
+| D8 | Test corpus | Public FSRA and regulation material found by Claude, plus 2 or 3 generic carrier process documents from Alireza. List in `research/corpus/sources.md` | Regulatory sources listed. Process documents not yet received |
+| D9 | Claude API key for extraction | `ANTHROPIC_API_KEY` in `product/.env.local`, never committed | Not yet set |
+
+P1 is blocked by D8 and D9.
 
 ---
 
@@ -57,7 +69,7 @@ Nothing now blocks P0.
 
 **Build.**
 - Extraction split by layer, per rule 13: an org pass, a systems pass, a process pass, a data pass, each with a small flat schema.
-- Run it against a real corpus: the public SABS regulatory material plus two or three generic carrier process documents.
+- Run it against a real corpus: the public SABS regulatory material plus two or three generic carrier process documents. The list is `research/corpus/sources.md`. Copies stay out of git.
 - Output nodes and edges as JSON into the P0 schema.
 - A crude review list so each extracted node can be marked accepted, edited or rejected.
 

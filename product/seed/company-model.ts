@@ -136,6 +136,12 @@ export const nodes: SeedNode[] = [
     name: "First payor",
     attributes: { definition: "The source that pays a benefit before any other source is asked" },
   },
+  {
+    key: "constraint.sabs-date",
+    type: "Constraint",
+    name: "Changes must be live for policies effective on or after 2026-07-01",
+    attributes: { kind: "regulatory" },
+  },
 ];
 
 export const edges: SeedEdge[] = [
@@ -151,6 +157,10 @@ export const edges: SeedEdge[] = [
   { type: "executed_in", from: "step.rate-quote", to: "sys.rating" },
   { type: "executed_in", from: "step.adjudicate-rehab", to: "sys.claims" },
   { type: "precedes", from: "step.select-benefits", to: "step.rate-quote" },
+  { type: "part_of", from: "step.select-benefits", to: "proc.quote-bind" },
+  { type: "part_of", from: "step.rate-quote", to: "proc.quote-bind" },
+  { type: "part_of", from: "step.adjudicate-rehab", to: "proc.ab-claim" },
+  { type: "part_of", from: "dp.workplace-benefits", to: "proc.ab-claim" },
   { type: "triggers", from: "channel.broker", to: "proc.quote-bind" },
   { type: "triggers", from: "channel.direct", to: "proc.quote-bind" },
   { type: "reads", from: "sys.rating", to: "field.ir-selection" },
@@ -170,9 +180,12 @@ export const edges: SeedEdge[] = [
   { type: "derived_from", from: "rule.ir-optional", to: "obl.offer-ir-optional" },
   { type: "derived_from", from: "rule.insurer-first-payor", to: "reg.sabs-2026" },
   { type: "derived_from", from: "req.br-001", to: "obl.insurer-first-payor" },
+  { type: "derived_from", from: "obl.insurer-first-payor", to: "reg.sabs-2026" },
+  { type: "derived_from", from: "obl.offer-ir-optional", to: "reg.sabs-2026" },
   { type: "implements", from: "req.fr-001", to: "field.payor-order" },
   { type: "traces_to", from: "ac.payor-order", to: "req.fr-001" },
   { type: "traces_to", from: "test.rehab-with-workplace", to: "req.fr-001" },
+  { type: "constrains", from: "constraint.sabs-date", to: "rule.ir-optional" },
 ];
 
 export const documents: SeedDocument[] = [

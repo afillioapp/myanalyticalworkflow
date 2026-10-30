@@ -1,6 +1,6 @@
 # Project Rules
 
-Last updated: 2026-10-28
+Last updated: 2026-10-30
 
 Two sections. Section A is stated directly by Alireza. Section B is adopted from the Agentic Design Patterns guide (BASWE, 2026) and approved on 2026-10-26. Nothing in this file is inferred without being labelled.
 
@@ -145,6 +145,8 @@ My Analytical Work Flow/
     Deep Research/
       chatgpt-research.md
       bsa-stage-outcomes.md
+    corpus/
+      sources.md
   pain-points/
     pain-points.md
   research/

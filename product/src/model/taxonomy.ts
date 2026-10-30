@@ -48,6 +48,9 @@ export const NODE_TYPES = {
   Dependency: "governance",
   Decision: "governance",
   GlossaryTerm: "governance",
+  // Added 2026-10-30 (ST-01-12). Attribute `kind`: budget, date, vendor, regulatory,
+  // architecture, privacy, security or capacity.
+  Constraint: "governance",
 } as const satisfies Record<string, Layer>;
 
 export type NodeType = keyof typeof NODE_TYPES;
@@ -80,6 +83,9 @@ export const EDGE_TYPES = {
   performed_by: { from: ["ProcessStep"], to: ["Role"] },
   executed_in: { from: ["ProcessStep"], to: ["System"] },
   precedes: { from: ["ProcessStep"], to: ["ProcessStep"] },
+  // Added 2026-10-30. Places a step or decision point in its process, and a sub-process
+  // in its parent, which is what lets the graph view zoom from process into steps.
+  part_of: { from: ["ProcessStep", "DecisionPoint", "Process"], to: ["Process"] },
   triggers: { from: "*", to: ["Process"] },
   reads: { from: ["System", "ProcessStep"], to: ["DataEntity", "DataField"] },
   writes: { from: ["System", "ProcessStep"], to: ["DataEntity", "DataField"] },
@@ -87,11 +93,14 @@ export const EDGE_TYPES = {
   belongs_to: { from: ["DataField", "Coverage"], to: ["DataEntity", "Product"] },
   renders_on: { from: ["DataField"], to: ["Form", "ProcessStep"] },
   governed_by: { from: "*", to: ["BusinessRule"] },
-  derived_from: { from: ["BusinessRule", "Requirement"], to: ["Obligation", "Regulation"] },
+  // Obligation added 2026-10-30: an obligation is a duty derived from a regulation.
+  derived_from: { from: ["BusinessRule", "Requirement", "Obligation"], to: ["Obligation", "Regulation"] },
   // Spec target is "change on a node". Changes arrive with SolutionOptions in a later
   // phase; until then the target is the node being changed. Open item, not a decision.
   implements: { from: ["Requirement"], to: "*" },
   traces_to: { from: ["AcceptanceCriterion", "TestScenario"], to: ["Requirement"] },
+  // Added 2026-10-30 (ST-01-12).
+  constrains: { from: ["Constraint"], to: "*" },
 } as const satisfies Record<string, EdgeRule>;
 
 export type EdgeType = keyof typeof EDGE_TYPES;
