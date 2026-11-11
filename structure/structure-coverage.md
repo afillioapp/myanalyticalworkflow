@@ -1,6 +1,6 @@
 # Structure Coverage Register
 
-Last updated: 2026-10-28
+Last updated: 2026-10-30
 Owner: Structure agent, `agents/structure/structure.md`
 Sources: `research/Deep Research/chatgpt-research.md` (the guide, steps and outputs), and `research/Deep Research/bsa-stage-outcomes.md` (an outcome and a question set per stage). Phase IDs and phase outcomes from `structure/bsa-lifecycle-phases.md`. Feature IDs from `traceability.md`.
 
@@ -16,7 +16,7 @@ ID scheme: `ST-<phase>-<item>`. Steps keep the guide's numbering. Outputs are O1
 
 | Phase | Items | Covered | Partial | Gap | Out of scope | Run |
 |---|---|---|---|---|---|---|
-| PH-01 Initiation and preparation | 25 | 6 | 12 | 6 | 1 | 2026-10-28 |
+| PH-01 Initiation and preparation | 25 | 6 | 14 | 4 | 1 | 2026-10-30 |
 | PH-02 to PH-25 | - | - | - | - | - | Not yet run |
 
 ---
@@ -64,7 +64,7 @@ Guide section 2. Phase outcome: problem statement, stakeholder list. Questions: 
 | ST-01-09 | Review existing documentation | The relevant existing documents are listed | Partial | F-02 ingests documents at onboarding. No per-request review step |
 | ST-01-10 | Review existing work | Related prior requirements, decisions and open issues are found | Partial | F-05 searches the graph and request history. Jira and Confluence are excluded by design spec section 9 |
 | ST-01-11 | Understand the current environment | Each system's state is known: in production, migrating, being configured, or built from scratch | Partial | The Environment node type exists, F-01. Nothing records which of the four states a system is in |
-| ST-01-12 | Identify known constraints | A list of constraints: budget, dates, vendor, regulation, architecture, privacy, security, capacity | Gap | No Constraint node type. F-28 RAID does not cover constraints |
+| ST-01-12 | Identify known constraints | A list of constraints: budget, dates, vendor, regulation, architecture, privacy, security, capacity | Partial | Constraint node type and `constrains` edge added 2026-10-30, so the model can hold them. Intake does not ask for constraints yet |
 | ST-01-13 | Identify initial stakeholders | A stakeholder list | Partial | Design spec section 8 lists a stakeholder map and RACI as derivable, but no feature produces it |
 | ST-01-14 | Identify missing information | Assumptions, unknowns, conflicts and open questions are recorded | Partial | Assumptions via F-28, questions via F-11. Conflicting statements have nowhere to go |
 | ST-01-15 | Establish the BSA's role | What the analyst owns on this request | Gap | Not recorded. May not apply while v1 is a solo user. Alireza's call |
@@ -78,7 +78,7 @@ Guide section 2. Phase outcome: problem statement, stakeholder list. Questions: 
 |---|---|---|---|
 | ST-01-O1 | Initial problem or opportunity statement | Partial | F-06 captures a problem as a Symptom. An opportunity, such as a new product (one of the F-35 triggers), has no symptom and nowhere to go |
 | ST-01-O2 | Stakeholder list and preliminary RACI | Partial | Same as ST-01-13 |
-| ST-01-O3 | Initial scope and constraints | Gap | Same as ST-01-12 and ST-01-17 |
+| ST-01-O3 | Initial scope and constraints | Partial | Constraints can now be recorded, ST-01-12. Initial scope still has no home at intake, ST-01-17 |
 | ST-01-O4 | Document and system inventory | Partial | Systems are nodes in the model, F-01. Nothing says documents uploaded through F-02 are kept and listed after extraction |
 | ST-01-O5 | Preliminary risks, assumptions, dependencies and open questions | Covered | F-28 RAID and F-11 |
 | ST-01-O6 | Discovery agenda and meeting invitations | Out of scope | Invitations are notifications, and v1 has none: design spec section 3, solo user. The agenda part is the F-11 question list |
@@ -93,7 +93,7 @@ For outputs, the output is itself the outcome, so there is no separate outcome c
 
 ### Decisions needed from PH-01
 
-1. **ST-01-12 Constraints.** Add a Constraint node type to the taxonomy, or hold constraints another way?
+1. ~~ST-01-12 Constraints.~~ Decided 2026-10-30: new Constraint node type with a `constrains` edge.
 2. **ST-01-06 Urgency.** Capture a deadline and its reason at intake, with a flag for regulatory versus preferred?
 3. **ST-01-O1 Opportunities.** A new-product request has no symptom. What does intake capture instead?
 4. **ST-01-01 Assigner.** Record who assigned the work, separately from the sponsor?

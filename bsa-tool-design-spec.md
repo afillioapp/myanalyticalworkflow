@@ -1,7 +1,7 @@
 # BSA Tool: Design Spec
 
 Status: brainstorm consolidated, pre-build
-Last updated: 2026-10-28
+Last updated: 2026-11-11
 Companion file: bsa-practice-brief.md (real-world practice input, separate source)
 
 ---
@@ -117,27 +117,30 @@ This is the foundational decision. Everything generated downstream is wrong in t
 - Risk, Assumption, Issue, Dependency
 - Decision
 - GlossaryTerm
+- Constraint (budget, date, vendor, regulatory, architecture, privacy, security, capacity). Added 2026-10-30, from structure item ST-01-12
 
 ### Edge types
 
 | Edge | From | To |
 |---|---|---|
 | reports_to | Role | Role |
-| member_of | Person, Team | Team, Department |
+| member_of | Person, Team, Role | Team, Department. Role added 2026-11-11 so the graph can place roles, and the steps they perform, in a department lane |
 | owns | Role | any node |
 | approves | Role | any node or artifact |
 | performed_by | ProcessStep | Role |
 | executed_in | ProcessStep | System |
 | precedes | ProcessStep | ProcessStep |
+| part_of | ProcessStep, DecisionPoint, Process | Process. Added 2026-10-30: places a step in its process, and a sub-process in its parent |
 | triggers | any node | Process |
 | reads / writes | System, ProcessStep | DataEntity, DataField |
 | integrates_with | System | System (via Integration) |
 | belongs_to | DataField, Coverage | DataEntity, Product |
 | renders_on | DataField | Form, ProcessStep |
 | governed_by | any node | BusinessRule |
-| derived_from | BusinessRule, Requirement | Obligation, Regulation |
+| derived_from | BusinessRule, Requirement, Obligation | Obligation, Regulation. Obligation as a source added 2026-10-30 |
 | implements | Requirement | change on a node |
 | traces_to | AcceptanceCriterion, TestScenario | Requirement |
+| constrains | Constraint | any node. Added 2026-10-30 |
 | impacts | computed at query time, never stored |
 
 A **handoff** is not a node or a stored edge. It is any edge crossing a department lane. Handoffs are where things break, so the UI should surface them automatically.
@@ -446,17 +449,17 @@ Still live work for carriers, because in-force contracts renew with their existi
 ## 12. Open items
 
 - Model import and export format.
-- What the AI extraction prompt and output schema look like. This is the highest risk piece, so it needs its own design pass.
+- What the AI extraction prompt and output schema look like. First version built for P1 on 2026-11-11: five passes with flat schemas in `product/src/extraction/`. P1 measures whether it is good enough.
 - The starter model for a P and C insurance carrier. How much ships pre-built versus gets extracted.
 - Node confidence scoring. How confidence is calculated and how it is shown without cluttering the graph.
 - How the coverage indicator handles nodes a user deliberately marks as not applicable.
-- Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general.
+- Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general. SABS (section 11) is one test scenario, not the product. A second-scenario run in P1 is proposed in the roadmap, not yet decided.
 - Whether SuccessMeasure tracking stays out of v1 or earns its way in. Section 6d records the measures but does nothing with them.
 - Whether field mapping or a canonical data model represents DataField mappings. See section 4c.
 - Request trigger (F-35): can a request have more than one trigger, for example a regulatory change that also exposes a defect? Is there an "other" choice? Does a regulatory change route straight to mandate mode, and does an audit finding?
 - Phase outcomes not stated in either source: PH-05 stakeholder analysis, PH-12 UX, PH-25 documentation and closure. The rail's Discovery session and Sign off phases depend on PH-05 and PH-25.
 - Whether the five any-phase questions (rules rule 16) become a standing question set in F-11, or content for the F-20 teaching panels.
-- PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no Constraint node type, no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
+- PH-01 gaps raised by the Structure agent, listed in `structure/structure-coverage.md`: no request deadline or urgency, no home for an opportunity that has no symptom, no record of who assigned the work, nowhere for conflicting stakeholder statements.
 - Coverage indicator states. Addressed, not applicable and blocked are three states, not two. The BSA process document tracks blocked tests separately from failed ones for the same reason.
 
 ---

@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-28
+Last updated: 2026-11-11
 Pattern: this is the Planning pattern artifact described in rules/rules.md rule 8 and the Tech Lead agent stub. The plan is data, not prose: every phase names what gets built, what proves it works, and what unlocks the next one.
 Re-plan at the checkpoint after P4, not only on failure.
 
@@ -20,6 +20,19 @@ Settled 2026-10-26.
 | D4 | Lifecycle boundary | Stays at approved documents and sign off. Success measures and baselines are still captured at intake, per design spec 6d |
 
 Nothing now blocks P0.
+
+## Before P1: decisions
+
+| # | Decision | Answer | Status |
+|---|---|---|---|
+| D5 | How a process step links to its process | New `part_of` edge: ProcessStep, DecisionPoint or Process to Process | Settled and built 2026-10-30 |
+| D6 | How an obligation links to its regulation | `derived_from` widened to allow Obligation to Regulation | Settled and built 2026-10-30 |
+| D7 | Where constraints live | New Constraint node type and `constrains` edge (ST-01-12) | Settled and built 2026-10-30 |
+| D8 | Test corpus | Public FSRA and regulation material found by Claude, plus 2 or 3 generic carrier process documents from Alireza. List in `research/corpus/sources.md` | Regulatory sources listed. Process documents not yet received |
+| D9 | How extraction is paid for | A Claude Code cloud session on claude.ai/code runs P1 and spends that session's credit. The code calls no model and needs no API key. See `product/P1-RUNBOOK.md` | Settled 2026-10-30 |
+| D10 | Extraction passes | Five: org, systems, data, business, process. The business pass was added because regulatory and product documents are mostly products, coverages, rules and obligations, which the four layer passes miss. The SABS test material showed this first, but it holds for any regulatory change (rule 13 updated) | Settled 2026-10-30 |
+
+P1 code is built and tested (2026-11-11): `product/src/extraction/`, `product/scripts/p1.ts`, 24 passing tests. What remains is the run itself, which is blocked by D8: the carrier process documents.
 
 ---
 
@@ -56,8 +69,8 @@ Nothing now blocks P0.
 **This phase is deliberately throwaway.** No UI, no polish, a script and a JSON output. The point is the measurement, not the code.
 
 **Build.**
-- Extraction split by layer, per rule 13: an org pass, a systems pass, a process pass, a data pass, each with a small flat schema.
-- Run it against a real corpus: the public SABS regulatory material plus two or three generic carrier process documents.
+- Extraction split by layer, per rule 13: org, systems, data, business and process passes, each with a small flat schema. Built: `product/src/extraction/passes.ts`.
+- Run it against a real corpus: the public SABS regulatory material plus two or three generic carrier process documents. SABS is one test scenario, not the product: nothing in the taxonomy, the passes or the prompts is specific to SABS. The taxonomy is insurance-first by design (design spec section 3), so types such as Coverage are meant to be there. The list is `research/corpus/sources.md`. Copies stay out of git.
 - Output nodes and edges as JSON into the P0 schema.
 - A crude review list so each extracted node can be marked accepted, edited or rejected.
 
@@ -75,6 +88,10 @@ Nothing now blocks P0.
 - Criterion 1 below 40 percent, or criterion 4 fails: stop and rethink. The AI-seeded onboarding premise is the thing being tested here, and the fallback is the guided interview carrying onboarding alone, which is a different product with a different sales pitch.
 
 **Blocked by.** P0.
+
+**Status, 2026-11-11: built and tested, not yet run.** The code, the review commands and the runbook (`product/P1-RUNBOOK.md`) are done. The run is waiting on two things from Alireza: the 2 or 3 generic carrier process documents (D8), and opening a cloud session on claude.ai/code to run it (D9). No result band yet.
+
+Open decision, proposed 2026-11-11: with one scenario only, extraction could end up tuned to SABS without anyone noticing. Option: before P1 exits, also run one document from a different scenario, or a different industry, and check the same criteria hold. This is also the first test of the insurance-first risk in design spec section 12. Not part of the gate until Alireza decides.
 
 ---
 
@@ -100,6 +117,22 @@ Nothing now blocks P0.
 **Exit gate.** You can look at a loaded company model and understand it faster than reading the documents it came from.
 
 **Blocked by.** P0. Benefits from P1 but does not require it.
+
+**Status, 2026-11-11: built and live, awaiting your review against the exit gate.**
+
+| Criterion | Result | How it was checked |
+|---|---|---|
+| 1. Same render on every reload | Pass | Test: identical positions on repeat runs and with the model in shuffled order |
+| 2. Every node type has a look and is findable | Pass | Test: all 36 types found by search and revealed. Colour by layer, type label on every node |
+| 3. Select dims exactly the unconnected rest | Pass | Test: the lit set equals the node plus its direct neighbours, for every node |
+| 4. 300 nodes legible and interactive | Pass on the automated part | Test on a 300-node model: one node per lane when closed, no overlaps when fully open, layout in about 0.3 seconds. Whether it reads well is your call |
+| 5. AI-extracted unverified looks different | Pass | Test: AI nodes get an orange dashed outline and their confidence, confirmed nodes a tick. The sample model has no AI nodes yet; P1 will add them |
+
+Decisions made while building: D11, a Role sits in a lane through `member_of` (Role to Team or Department), settled 2026-11-11. Lanes are derived from edges only. Anything with no owner goes in an Unassigned lane, which makes missing ownership visible.
+
+Known limits: zoom is double-click on a lane or process, not the scroll wheel. The left-to-right position uses every edge, so ownership links also push nodes right, not only process flow. Nodes cannot be dragged, which is deliberate until P3 editing. Without data in the database, the page draws the sample model from the seed file and says so. `?open=all` opens every lane.
+
+Exit gate, still yours to judge: looking at the model, do you understand it faster than reading the documents it came from?
 
 ---
 
