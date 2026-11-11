@@ -1,6 +1,6 @@
 # Project Rules
 
-Last updated: 2026-10-30
+Last updated: 2026-11-11
 
 Two sections. Section A is stated directly by Alireza. Section B is adopted from the Agentic Design Patterns guide (BASWE, 2026) and approved on 2026-10-26. Nothing in this file is inferred without being labelled.
 
@@ -92,7 +92,7 @@ Cheap to honour now. Expensive to retrofit, and a blocker on any enterprise sale
 
 Structured output schemas must stay flat and small. Deep schemas with many optional fields produce more errors.
 
-The meta-model has roughly thirty node types. One extraction call covering all of them is the known failure mode. Split into passes with small schemas: an org pass, a systems pass, a process pass, a data pass.
+The meta-model has roughly thirty node types. One extraction call covering all of them is the known failure mode. Split into passes with small schemas: an org pass, a systems pass, a process pass, a data pass, and a business pass. The business pass was added 2026-10-30 because regulatory documents are mostly products, coverages, rules and obligations, which the first four passes would miss.
 
 This directly de-risks document ingest, which is the highest risk component in the product.
 

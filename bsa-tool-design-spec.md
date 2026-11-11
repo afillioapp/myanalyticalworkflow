@@ -449,7 +449,7 @@ Still live work for carriers, because in-force contracts renew with their existi
 ## 12. Open items
 
 - Model import and export format.
-- What the AI extraction prompt and output schema look like. This is the highest risk piece, so it needs its own design pass.
+- What the AI extraction prompt and output schema look like. First version built for P1 on 2026-11-11: five passes with flat schemas in `product/src/extraction/`. P1 measures whether it is good enough.
 - The starter model for a P and C insurance carrier. How much ships pre-built versus gets extracted.
 - Node confidence scoring. How confidence is calculated and how it is shown without cluttering the graph.
 - How the coverage indicator handles nodes a user deliberately marks as not applicable.

@@ -14,7 +14,8 @@
     "db:migrate": "tsx scripts/db.ts migrate",
     "db:reset": "tsx scripts/db.ts reset",
     "db:seed": "tsx scripts/db.ts seed",
-    "vercel-build": "tsx scripts/db.ts migrate && next build"
+    "vercel-build": "tsx scripts/db.ts migrate && next build",
+    "p1": "tsx scripts/p1.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
@@ -36,6 +37,7 @@
     "eslint-config-next": "^16.4.3",
     "tsx": "^4.23.15",
     "typescript": "^5",
+    "unpdf": "1.9.0",
     "vitest": "^5.0.5"
   },
   "engines": {

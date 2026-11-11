@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-30
+Last updated: 2026-11-11
 Pattern: this is the Planning pattern artifact described in rules/rules.md rule 8 and the Tech Lead agent stub. The plan is data, not prose: every phase names what gets built, what proves it works, and what unlocks the next one.
 Re-plan at the checkpoint after P4, not only on failure.
 
@@ -29,9 +29,10 @@ Nothing now blocks P0.
 | D6 | How an obligation links to its regulation | `derived_from` widened to allow Obligation to Regulation | Settled and built 2026-10-30 |
 | D7 | Where constraints live | New Constraint node type and `constrains` edge (ST-01-12) | Settled and built 2026-10-30 |
 | D8 | Test corpus | Public FSRA and regulation material found by Claude, plus 2 or 3 generic carrier process documents from Alireza. List in `research/corpus/sources.md` | Regulatory sources listed. Process documents not yet received |
-| D9 | Claude API key for extraction | `ANTHROPIC_API_KEY` in `product/.env.local`, never committed | Not yet set |
+| D9 | How extraction is paid for | A Claude Code cloud session on claude.ai/code runs P1 and spends that session's credit. The code calls no model and needs no API key. See `product/P1-RUNBOOK.md` | Settled 2026-10-30 |
+| D10 | Extraction passes | Five: org, systems, data, business, process. The business pass was added because the SABS material is mostly business content (rule 13 updated) | Settled 2026-10-30 |
 
-P1 is blocked by D8 and D9.
+P1 code is built and tested (2026-11-11): `product/src/extraction/`, `product/scripts/p1.ts`, 24 passing tests. What remains is the run itself, which is blocked by D8: the carrier process documents.
 
 ---
 
@@ -68,7 +69,7 @@ P1 is blocked by D8 and D9.
 **This phase is deliberately throwaway.** No UI, no polish, a script and a JSON output. The point is the measurement, not the code.
 
 **Build.**
-- Extraction split by layer, per rule 13: an org pass, a systems pass, a process pass, a data pass, each with a small flat schema.
+- Extraction split by layer, per rule 13: org, systems, data, business and process passes, each with a small flat schema. Built: `product/src/extraction/passes.ts`.
 - Run it against a real corpus: the public SABS regulatory material plus two or three generic carrier process documents. The list is `research/corpus/sources.md`. Copies stay out of git.
 - Output nodes and edges as JSON into the P0 schema.
 - A crude review list so each extracted node can be marked accepted, edited or rejected.
