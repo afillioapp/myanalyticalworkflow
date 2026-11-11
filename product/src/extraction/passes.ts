@@ -1,6 +1,7 @@
 // P1 extraction passes. Rule 13: one small, flat schema per layer, never one call for the
-// whole taxonomy. The business pass was added 2026-10-30 because the SABS material is mostly
-// business content that the four passes in rule 13 would not pick up.
+// whole taxonomy. The business pass was added 2026-10-30 because regulatory and product
+// documents are mostly products, coverages, rules and obligations, which the four layer passes
+// would not pick up. Nothing here is specific to SABS, which is only the test scenario.
 //
 // Passes run in this order. Each later pass sees the nodes found so far, so it can draw
 // edges to them (a process step performed_by a Role from the org pass).

@@ -11,7 +11,7 @@ The app. Planning lives one level up: `../roadmap.md`, `../bsa-tool-design-spec.
 | `npm run db:seed` | Reset, then load `seed/company-model.ts` |
 | `npm run db:generate` | Write a migration after changing `src/db/schema.ts` or `src/model/taxonomy.ts` |
 | `npm run dev` | Local app on http://localhost:3000 |
-| `npm run p1 -- <step>` | P1 extraction spike: start, next, assemble, next-review, decide, report, load. See `P1-RUNBOOK.md` |
+| `npm run p1 -- <step>` | P1 extraction spike: start, next, assemble, next-review, decide, report, load. See `P1-RUNBOOK.md`. Built and tested, not yet run (2026-11-11) |
 
 With no `DATABASE_URL`, the db commands use PGlite (Postgres in-process) stored in `./.pglite`. With `DATABASE_URL` set they run against that database. Vercel runs migrations before every build (`vercel-build`).
 

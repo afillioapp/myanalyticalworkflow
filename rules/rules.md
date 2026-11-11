@@ -149,7 +149,6 @@ My Analytical Work Flow/
       sources.md
   pain-points/
     pain-points.md
-  research/
   agents/
     quality-gate-control/
     learner/
@@ -160,10 +159,13 @@ My Analytical Work Flow/
     ui-ux-manager/
     structure/
   product/
+    P1-RUNBOOK.md
+    README.md
   roadmap.md
   traceability.md
   bsa-tool-design-spec.md
-  bsa-practice-brief.md
+  bsa-practice-brief.md     (local only, gitignored: real employer details)
+  graphify-out/             (local only, gitignored: knowledge graph of this folder)
 ```
 
 ## Open

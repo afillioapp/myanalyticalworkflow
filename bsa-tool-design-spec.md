@@ -453,7 +453,7 @@ Still live work for carriers, because in-force contracts renew with their existi
 - The starter model for a P and C insurance carrier. How much ships pre-built versus gets extracted.
 - Node confidence scoring. How confidence is calculated and how it is shown without cluttering the graph.
 - How the coverage indicator handles nodes a user deliberately marks as not applicable.
-- Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general.
+- Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general. SABS (section 11) is one test scenario, not the product. A second-scenario run in P1 is proposed in the roadmap, not yet decided.
 - Whether SuccessMeasure tracking stays out of v1 or earns its way in. Section 6d records the measures but does nothing with them.
 - Whether field mapping or a canonical data model represents DataField mappings. See section 4c.
 - Request trigger (F-35): can a request have more than one trigger, for example a regulatory change that also exposes a defect? Is there an "other" choice? Does a regulatory change route straight to mandate mode, and does an audit finding?
