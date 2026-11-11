@@ -76,7 +76,9 @@ export interface EdgeRule {
 // `impacts` is deliberately absent: the spec says it is computed at query time, never stored.
 export const EDGE_TYPES = {
   reports_to: { from: ["Role"], to: ["Role"] },
-  member_of: { from: ["Person", "Team"], to: ["Team", "Department"] },
+  // Role added 2026-11-11: a role sits in a team or department, which is how the graph
+  // view places it, and every step it performs, in a department lane.
+  member_of: { from: ["Person", "Team", "Role"], to: ["Team", "Department"] },
   owns: { from: ["Role"], to: "*" },
   // Spec says "any node or artifact". Artifacts (documents) are not nodes, so P0 covers nodes only.
   approves: { from: ["Role"], to: "*" },

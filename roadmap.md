@@ -114,6 +114,22 @@ P1 code is built and tested (2026-11-11): `product/src/extraction/`, `product/sc
 
 **Blocked by.** P0. Benefits from P1 but does not require it.
 
+**Status, 2026-11-11: built and live, awaiting your review against the exit gate.**
+
+| Criterion | Result | How it was checked |
+|---|---|---|
+| 1. Same render on every reload | Pass | Test: identical positions on repeat runs and with the model in shuffled order |
+| 2. Every node type has a look and is findable | Pass | Test: all 36 types found by search and revealed. Colour by layer, type label on every node |
+| 3. Select dims exactly the unconnected rest | Pass | Test: the lit set equals the node plus its direct neighbours, for every node |
+| 4. 300 nodes legible and interactive | Pass on the automated part | Test on a 300-node model: one node per lane when closed, no overlaps when fully open, layout in about 0.3 seconds. Whether it reads well is your call |
+| 5. AI-extracted unverified looks different | Pass | Test: AI nodes get an orange dashed outline and their confidence, confirmed nodes a tick. The sample model has no AI nodes yet; P1 will add them |
+
+Decisions made while building: D11, a Role sits in a lane through `member_of` (Role to Team or Department), settled 2026-11-11. Lanes are derived from edges only. Anything with no owner goes in an Unassigned lane, which makes missing ownership visible.
+
+Known limits: zoom is double-click on a lane or process, not the scroll wheel. The left-to-right position uses every edge, so ownership links also push nodes right, not only process flow. Nodes cannot be dragged, which is deliberate until P3 editing. Without data in the database, the page draws the sample model from the seed file and says so. `?open=all` opens every lane.
+
+Exit gate, still yours to judge: looking at the model, do you understand it faster than reading the documents it came from?
+
 ---
 
 ## P3: Onboarding

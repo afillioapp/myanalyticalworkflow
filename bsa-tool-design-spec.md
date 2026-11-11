@@ -1,7 +1,7 @@
 # BSA Tool: Design Spec
 
 Status: brainstorm consolidated, pre-build
-Last updated: 2026-10-30
+Last updated: 2026-11-11
 Companion file: bsa-practice-brief.md (real-world practice input, separate source)
 
 ---
@@ -124,7 +124,7 @@ This is the foundational decision. Everything generated downstream is wrong in t
 | Edge | From | To |
 |---|---|---|
 | reports_to | Role | Role |
-| member_of | Person, Team | Team, Department |
+| member_of | Person, Team, Role | Team, Department. Role added 2026-11-11 so the graph can place roles, and the steps they perform, in a department lane |
 | owns | Role | any node |
 | approves | Role | any node or artifact |
 | performed_by | ProcessStep | Role |
