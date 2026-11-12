@@ -5,7 +5,7 @@
 
 import { v5 as uuidv5 } from "uuid";
 import { z } from "zod";
-import { checkEdge, EDGE_TYPE_NAMES, NODE_TYPE_NAMES, type EdgeType, type NodeType } from "@/model/taxonomy";
+import { checkEdge, EDGE_TYPE_NAMES, EDGE_TYPES, NODE_TYPE_NAMES, type EdgeType, type NodeType } from "@/model/taxonomy";
 import { PASSES, type Pass } from "./passes";
 
 export interface ModelRequest {
@@ -118,12 +118,25 @@ export function passSchema(pass: Pass): object {
   };
 }
 
+// The allowed endpoints for each edge type, spelled out from the taxonomy. Without them the
+// first P1 run guessed, and 83 edges were dropped at assemble (for example governed_by
+// pointing at a Regulation, when it may only point at a BusinessRule).
+function edgeRuleLines(pass: Pass): string[] {
+  const side = (e: "*" | readonly NodeType[]) => (e === "*" ? "any node type" : e.join(" or "));
+  return pass.edgeTypes.map((t) => {
+    const rule: { from: "*" | readonly NodeType[]; to: "*" | readonly NodeType[]; via?: NodeType } = EDGE_TYPES[t];
+    const via = rule.via ? `, and its via must be the key of a node of type ${rule.via}` : "";
+    return `- ${t}: from ${side(rule.from)} to ${side(rule.to)}${via}`;
+  });
+}
+
 export function systemPrompt(pass: Pass): string {
   return [
     "You extract a company model from a business document for a business systems analyst.",
     `This is the ${pass.name} pass. ${pass.focus}`,
     `Extract only these node types: ${pass.nodeTypes.join(", ")}.`,
-    `Extract only these edge types: ${pass.edgeTypes.join(", ")}.`,
+    `Extract only these edge types, and only between these node types. Any other edge is dropped:`,
+    ...edgeRuleLines(pass),
     "Only extract what the document states. Do not infer what a typical company would have.",
     "Give each node a short exact quote from the document that supports it, and a confidence from 0 to 1.",
     "An edge may connect nodes from this answer and nodes in the known nodes list, using their keys.",

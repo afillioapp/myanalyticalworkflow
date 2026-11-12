@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { connect, type Connection } from "@/db/client";
 import { tenants, users } from "@/db/schema";
 import { htmlToText } from "@/extraction/documents";
-import { extractDocument, passSchema, userMessage, type CallModel } from "@/extraction/extract";
+import { extractDocument, passSchema, systemPrompt, userMessage, type CallModel } from "@/extraction/extract";
 import { PASSES } from "@/extraction/passes";
 import { measure, toEvents, type Review } from "@/extraction/review";
 import { commit } from "@/model/log";
@@ -172,5 +172,18 @@ describe("P1 output lands in the P0 schema", () => {
 describe("documents", () => {
   it("turns HTML into text without scripts", () => {
     expect(htmlToText("<p>A &amp; B</p><script>alert(1)</script><li>C</li>")).toBe("A & B\n C");
+  });
+});
+
+describe("pass prompts state the allowed edge endpoints", () => {
+  it("names every edge type's endpoints, so the model does not have to guess them", () => {
+    for (const pass of PASSES) {
+      const prompt = systemPrompt(pass);
+      for (const t of pass.edgeTypes) expect(prompt, `${pass.name} pass, ${t}`).toMatch(new RegExp(`^- ${t}: from .+ to .+`, "m"));
+    }
+    const business = systemPrompt(PASSES.find((p) => p.name === "business")!);
+    expect(business).toContain("- governed_by: from any node type to BusinessRule");
+    const systems = systemPrompt(PASSES.find((p) => p.name === "systems")!);
+    expect(systems).toContain("- integrates_with: from System to System, and its via must be the key of a node of type Integration");
   });
 });

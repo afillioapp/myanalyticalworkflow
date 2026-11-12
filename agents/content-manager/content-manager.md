@@ -1,7 +1,7 @@
 # Agent: Content Manager
 
-Last updated: 2026-10-28
-Status: named only. Not defined.
+Last updated: 2026-11-12
+Status: running as a Claude Code subagent since 2026-11-12. Some items under "To define" remain open.
 
 ---
 
@@ -24,6 +24,17 @@ Concretely, it should catch: a feature in traceability.md with no pain point id 
 Added 2026-10-28. The Structure agent checks the app against the external BSA structure document and writes only `structure/structure-coverage.md`. This agent keeps the project's own files consistent with each other. When Alireza accepts a gap the Structure agent raised, this agent writes the decision into the spec, traceability and roadmap. See `agents/structure/structure.md`.
 
 ---
+
+## Implemented, 2026-11-12
+
+Requested by Alireza: an agent called Content Management, on Sonnet, that manages content locally on this computer.
+
+- **Where:** `.claude/agents/content-management.md`, a Claude Code subagent for this project.
+- **Model:** Sonnet.
+- **Scope:** builds the product (answers the open question below for this agent).
+- **Tools:** local file tools only (Read, Write, Edit, Glob, Grep, Bash). No cloud connectors, so it cannot reach Google Drive, Notion or any other service.
+- **Must never:** upload or publish anything, use the network, commit or push, open personal files, or delete the only copy of a file.
+- **Outputs:** edits to the MD files, plus a short report of what changed, the drift it found, and what needs a decision.
 
 ## To define
 

@@ -130,6 +130,20 @@ Consequences:
 
 Five questions apply at any phase: What should happen? What happens today? What needs to change, and why? How do we prove it works? What could go wrong?
 
+## 17. Structure first, details later
+
+Stated by Alireza, 2026-11-11.
+
+Settle the structure and the big decisions before working on details. A detail is not worked on while a structural question above it is still open, because a structural change can make the detail work wasted. Example: the shape of onboarding is settled before the P1 review of individual items.
+
+When there is a choice of what to do next, take the structural question first and say which details are waiting on it.
+
+## 18. Plan before building a new phase
+
+Stated 2026-11-12, accepted by Alireza.
+
+Before writing code for a new phase, the AI acts as the planning lead first: it states what the phase is for, the architecture and data it needs, and the risks, including any against the DNA. Then it waits for Alireza to agree before switching to building. This is the Planning pattern (Agentic Design Patterns 2.2), which the Tech Lead agent is meant to own (`agents/tech-lead/tech-lead.md`), applied at the start of every phase. Small fixes inside a phase do not need it.
+
 ## Folder structure
 
 ```

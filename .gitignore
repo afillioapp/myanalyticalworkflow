@@ -18,3 +18,9 @@ research/corpus/runs/
 
 # Graphify knowledge graph: local only
 graphify-out/
+
+# Local downloads for the P1 corpus: third-party and personal files, never in git
+Downloaded files/
+
+# Google Drive shortcut files: pointers to cloud documents, not project content
+*.gdoc

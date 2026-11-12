@@ -15,7 +15,7 @@ No purpose, scope, inputs, outputs or authority were stated. Per rule 2, none ar
 
 ## Proposed, not yet confirmed
 
-The Planning pattern (rules/rules.md rule 8, and the pattern described in Agentic Design Patterns 2.2) decomposes a goal into ordered phases with verifiable outputs, executes them, and re-plans at checkpoints. That is the planner role, and Tech Lead is the natural owner of it.
+The Planning pattern (Agentic Design Patterns 2.2; rules/rules.md rule 18 applies it before every phase) decomposes a goal into ordered phases with verifiable outputs, executes them, and re-plans at checkpoints. That is the planner role, and Tech Lead is the natural owner of it.
 
 `roadmap.md` at the project root is the first artifact of that pattern. It was written by hand, not by this agent, and is marked as the Planning artifact so ownership is traceable once this agent is defined.
 

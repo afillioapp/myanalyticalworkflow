@@ -45,7 +45,7 @@ One per request, many running at once, each with its own state. Discovery, impac
 | Model depth | Down to data field level. Fields and business rules are nodes, not prose. |
 | v1 purpose | A tool genuinely used on real work, from which the demo falls out. |
 | Build path | Built by the owner with AI doing the coding. Spec must be implementation ready. |
-| First build slice | Onboarding plus impact analysis only. |
+| First build slice | Changed 2026-11-12: one thin trip around the whole loop, request to impact to questions to sign-off and write-back, on the sample model with a starter template. No AI. See section 10 and roadmap P3. |
 
 Consequence of the solo-user choice: roughly 40 percent of a normal enterprise build drops out. Also freeing in a subtler way. The model is a private working picture, so it is allowed to be a best guess. Nobody has to validate it before it is useful.
 
@@ -63,6 +63,14 @@ Onboarding offers a choice, not a fixed route. Both paths write to the same grap
 **The review queue follows the same rule.** AI extraction can produce hundreds of candidate nodes. They are reviewed in small batches grouped by layer and by confidence, lowest confidence first, never as one long list to work through.
 
 **They are not alternatives so much as two ends of one process.** The realistic flow is upload what exists, then let the tool interview you for what is missing. That makes the question set a gap-filling engine, not a form.
+
+**Start small, grow per request (2026-11-11). Partly decided, see the end of this block.** Raised by Alireza: most companies do not have current process documents (the research agrees: PP-19, PP-20, PP-22), and the model does not need the whole company, only the main parts the analyst works with. What insurers usually do have written down is regulation, products, coverages, forms and filed underwriting rules. Processes, people and systems are rarely current on paper. Proposal:
+
+- **A small starter template, confirmed rather than built.** Two short lists, pre-filled for an insurer: the delivery roles an analyst works with (Sponsor, Product Owner, BSA, QA, Developer, Architect, Release authority) and the main business departments a change touches (Product, Underwriting, Claims, Distribution, Finance, Compliance and Legal, IT). The user confirms, renames or removes. Both lists, decided by Alireza 2026-11-11.
+- **Detail is added only when a request needs it,** through intake questions and the documents attached to that request. This follows section 1: the model is only built in service of a live request.
+- **Documents fill the business and regulatory layers; the interview fills people, process and systems.** The interview becomes the main path, not the fallback.
+
+Decided: the starter template with both lists. Still a proposal: the interview as the main path and documents as the source for the business and regulatory layers, until P1's results, read layer by layer, show which layers documents can fill. This answers the section 12 open item on how much of the starter model ships pre-built.
 
 **Design consequence worth noting:** those onboarding questions come from the same place the impact-analysis questions do. The taxonomy in section 4 says a System node should have an owner, an environment, integrations and the data it reads and writes. Any of those missing is a gap, and a gap is a question. So this is one question engine with two uses: pointed at the model it completes onboarding, pointed at a change it drives impact analysis. Build it once.
 
@@ -349,6 +357,27 @@ Both tabs are dashboards, and a dashboard is many things at once, which runs aga
 - Which metrics make the first cut. Six candidates listed, probably three should ship.
 - Whether cycle-time data is meaningful for a solo user with few concurrent requests.
 
+## 6f. Compliance library (F-36, proposed 2026-11-11)
+
+Proposed by Alireza while collecting the P1 corpus by hand: finding each regulation on the publisher's site, saving it, naming it, and keeping track of which version is current. The tool should do that bookkeeping.
+
+**What it is.** A standing part of the app, area COMPLIANCE, where legal and regulatory documents live. It belongs to the company model, not to any one request. Each document has versions. Uploading a new version keeps the old one, and the newest is the current one.
+
+**Why.** PP-37: compliance constraints surface late. A carrier is always under some regulation, so the documents should already be there when a request starts, not uploaded again each time. The P1 corpus showed the version problem directly: FSRA's Q&A for insurers (C-02) is a living page, "Updated as of October 14, 2026", that adds new questions and flags them with an asterisk. A copy saved today is out of date the next time FSRA edits it, and nothing tells the analyst.
+
+**How it connects to what exists.**
+- A Regulation node points at its document and its versions. An Obligation records which version it was derived from.
+- A new version is a trigger: it can open a mandate request (F-07) with the trigger "regulatory change" (F-35). The tool shows what changed between versions, and which obligations and nodes the change touches (F-08, F-09).
+- AI may compare versions and propose changed obligations. The analyst confirms each one (section 6c, rule 12).
+
+**Model gap.** Uploaded source documents are not modelled yet. The `documents` table holds generated artifacts such as a BRD. A source document with versions, and the link from an extracted node to the version it came from, would need adding. Not built.
+
+**Open.**
+- Upload only, or does the tool also check publishers for new versions? FSRA blocked automated downloads during P1, so watching may not be possible.
+- Does a new version open a mandate request on its own, or only flag that one may be needed?
+- Regulations only, or also internal policies, contracts and legal opinions?
+- Where it sits in the roadmap: P4 already uploads a regulation for one request, which is the natural first slice. The standing library is after the checkpoint unless decided otherwise.
+
 ---
 
 ## 7. UI and UX direction
@@ -409,6 +438,10 @@ Also not yet decided, and needed before build: model import and export. Nobody p
 
 ## 10. First build slice
 
+**Changed 2026-11-12, decided by Alireza.** The first slice is now one thin trip around the whole loop, not onboarding plus impact. Roadmap P3: the sample model with the starter template, a request with its trigger, touched nodes tagged by the BSA, impact traversal, 3 to 5 structure-derived questions, pending changes, then sign-off and write-back. No AI. Roadmap P4 then runs the full SABS change through it. Document upload and AI extraction (item 1 below) move to after the checkpoint, with P1 paused. Sign off is no longer out of scope: write-back is in the first slice because it is what answers the staleness problem.
+
+The original slice, kept for the record:
+
 Onboarding plus impact analysis. Nothing after it.
 
 In scope:
@@ -450,7 +483,7 @@ Still live work for carriers, because in-force contracts renew with their existi
 
 - Model import and export format.
 - What the AI extraction prompt and output schema look like. First version built for P1 on 2026-11-11: five passes with flat schemas in `product/src/extraction/`. P1 measures whether it is good enough.
-- The starter model for a P and C insurance carrier. How much ships pre-built versus gets extracted.
+- The starter model for a P and C insurance carrier. Partly answered 2026-11-11: a small template of delivery roles and main departments ships pre-built (section 3, "Start small, grow per request"). Everything below that is added per request.
 - Node confidence scoring. How confidence is calculated and how it is shown without cluttering the graph.
 - How the coverage indicator handles nodes a user deliberately marks as not applicable.
 - Insurance-first risk: the node taxonomy in section 4 is domain real, which is the point, but it needs a second domain tested against it before any claim of being general. SABS (section 11) is one test scenario, not the product. A second-scenario run in P1 is proposed in the roadmap, not yet decided.
