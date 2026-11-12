@@ -6,7 +6,8 @@ import type { Actor } from "@/model/log";
 import { readModel } from "@/model/read";
 import { replay } from "@/model/log";
 import { checkEdge, NODE_TYPE_NAMES, type NodeType } from "@/model/taxonomy";
-import { GAP_RULES, MAX_QUESTIONS } from "@/requests/gaps";
+import { GAP_RULES, MAX_QUESTIONS, type EdgeGapRule } from "@/requests/gaps";
+import { readyForSignOff } from "./helpers/ready";
 import { impact } from "@/requests/impact";
 import {
   addNode,
@@ -38,7 +39,7 @@ const RIDESHARE =
 
 describe("the gap rules", () => {
   it("only ever ask for links the taxonomy allows", () => {
-    for (const rule of GAP_RULES) {
+    for (const rule of GAP_RULES.filter((r): r is EdgeGapRule => r.kind === "edge")) {
       for (const applies of rule.appliesTo) {
         for (const ans of rule.answer) {
           const [from, to] = rule.direction === "out" ? [applies, ans] : [ans, applies];
@@ -95,7 +96,9 @@ describe("P3-3: the same tags always give the same impact, each with its path", 
     expect(ids).toContain(id("sys.policy-admin"));
     expect(ids).toContain(id("role.underwriter"));
     for (const r of result) {
-      expect(r.path).toHaveLength(r.depth);
+      // Free chain steps (P4) add to the path but not to the distance.
+      expect(r.path.length).toBeGreaterThanOrEqual(r.depth);
+      if (r.depth > 0) expect(r.path.length).toBeGreaterThan(0);
       if (r.depth > 0) {
         const first = r.path[0];
         expect([first.from, first.to]).toContain(tags[0]);
@@ -148,6 +151,7 @@ describe("P3-5: questions come one at a time, at most five, never already answer
     const { next } = await readRequest(conn.db, actor, first);
     expect(next?.rule.id).toBe("step-performer");
     await answer(conn.db, actor, first, "step-performer", next!.nodeId, { kind: "unknown", note: "Ask the renewal team" });
+    await readyForSignOff(conn.db, actor, first);
     await signOff(conn.db, actor, first);
     const second = await createRequest(conn.db, actor, "Second");
     await tag(conn.db, actor, second, id("step.renew-existing"));
@@ -221,6 +225,7 @@ describe("P3-7: sign-off writes events, the next request sees them, replay repro
     // C-02 does not say how or when FSRA is notified: the honest answer is "don't know yet".
     await answer(conn.db, actor, first, q.rule.id, q.nodeId, { kind: "unknown", note: "C-02 does not say. Ask the FSRA relationship manager." });
 
+    await readyForSignOff(conn.db, actor, first);
     const pending = (await readRequest(conn.db, actor, first)).ops.length;
     const written = await signOff(conn.db, actor, first);
     expect(written).toBe(pending);
@@ -244,6 +249,9 @@ describe("P3-7: sign-off writes events, the next request sees them, replay repro
   });
 
   it("only offers node types the taxonomy has", () => {
-    for (const rule of GAP_RULES) for (const t of rule.answer) expect(NODE_TYPE_NAMES).toContain(t);
+    for (const rule of GAP_RULES) {
+      if (rule.kind === "edge") for (const t of rule.answer) expect(NODE_TYPE_NAMES).toContain(t);
+      for (const t of rule.appliesTo) expect(NODE_TYPE_NAMES).toContain(t);
+    }
   });
 });

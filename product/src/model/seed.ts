@@ -34,6 +34,7 @@ export function seedEvents(idOf: (key: string) => string = seedId): ModelEventIn
       fromId: seedId(e.from),
       toId: seedId(e.to),
       viaId: e.via ? seedId(e.via) : null,
+      attributes: e.attributes ?? {},
     },
   }));
   const documentEvents: ModelEventInput[] = seed.documents.flatMap((d): ModelEventInput[] => [

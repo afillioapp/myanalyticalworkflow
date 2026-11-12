@@ -27,6 +27,16 @@ With no `DATABASE_URL`, the db commands use PGlite (Postgres in-process) stored 
 
 Locally, with no `DATABASE_URL`, the app uses PGlite in `./.pglite` and migrates it on first use.
 
+## SABS stress test and people board (P4)
+
+The request page has ten cards: the request, trigger, mode (business request or mandate), intake, prior work, what it touches, questions, coverage, pending changes, and the quality gate with sign off. Sign-off is refused while any gate check fails.
+
+- `src/requests/impact.ts`: walking down a regulation's chain (Regulation or Obligation to what is derived from it, a rule to what follows it) is free; everything else costs 1, up to 2.
+- `src/requests/intake.ts`: the intake steps, one at a time, for each mode.
+- `src/requests/gate.ts`: coverage items and the quality gate checks, pure functions.
+- `src/requests/gaps.ts`: edge rules and attribute rules (the Integration and DataField questions).
+- `/people` (`src/people/board.ts`, `src/components/PeopleBoard.tsx`): departments and teams as columns, roles and people as cards. Drag a card to move it. Edits commit straight to the model as events.
+
 ## The graph view (P2)
 
 `/model` draws the model read-only: one lane per department, flow left to right, same picture every time. Click a node to dim everything not connected to it. Double-click a lane or a process to open it. Search finds any node and opens what it is inside. `/model?open=all` opens everything.

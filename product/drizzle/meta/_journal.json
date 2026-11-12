@@ -29,6 +29,13 @@
       "when": 1794502015505,
       "tag": "0003_p3_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794503555043,
+      "tag": "0004_p4_stress_test",
+      "breakpoints": true
     }
   ]
 }

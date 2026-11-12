@@ -44,9 +44,20 @@ export type AddEdgePayload = {
   viaId: null;
   attributes: Record<string, unknown>;
 };
+// P4: fills attributes on a node. It carries the merged attributes, so it becomes a plain
+// node.updated event and two answers on one node do not overwrite each other.
+export type UpdateNodePayload = { id: string; attributes: Record<string, unknown> };
 export type PendingOp =
   | { id: string; kind: "add_node"; payload: AddNodePayload; answerId: string | null; position: number }
-  | { id: string; kind: "add_edge"; payload: AddEdgePayload; answerId: string | null; position: number };
+  | { id: string; kind: "add_edge"; payload: AddEdgePayload; answerId: string | null; position: number }
+  | { id: string; kind: "update_node"; payload: UpdateNodePayload; answerId: string | null; position: number };
+
+// The node ids an operation touches, for coverage: a node touched by a pending change is addressed.
+export function touchedBy(op: PendingOp): string[] {
+  if (op.kind === "add_node") return [op.payload.id];
+  if (op.kind === "update_node") return [op.payload.id];
+  return [op.payload.fromId, op.payload.toId];
+}
 
 export function workingModel(baseline: Pick<Model, "nodes" | "edges">, ops: PendingOp[]): Working {
   const nodes: WNode[] = baseline.nodes.map((n) => ({
@@ -69,6 +80,9 @@ export function workingModel(baseline: Pick<Model, "nodes" | "edges">, ops: Pend
     if (op.kind === "add_node") {
       const p = op.payload;
       nodes.push({ id: p.id, type: p.nodeType, layer: layerOf(p.nodeType), name: p.name, attributes: p.attributes, pending: true });
+    } else if (op.kind === "update_node") {
+      const node = nodes.find((n) => n.id === op.payload.id);
+      if (node) node.attributes = op.payload.attributes;
     } else {
       const p = op.payload;
       edges.push({ id: p.id, type: p.edgeType, from: p.fromId, to: p.toId, via: null, pending: true });

@@ -47,6 +47,7 @@ const EDGE_PHRASES: Record<EdgeType, string> = {
   implements: "implements",
   traces_to: "traces to",
   constrains: "constrains",
+  supports: "supports",
 };
 
 export const edgePhrase = (t: EdgeType) => EDGE_PHRASES[t];
@@ -65,5 +66,25 @@ export function stepText(model: Working, step: Step): string {
 export function opText(model: Working, op: PendingOp): string {
   const name = nameIn(model);
   if (op.kind === "add_node") return `Add ${typeLabel(op.payload.nodeType).toLowerCase()}: ${op.payload.name}`;
+  if (op.kind === "update_node") return `Record on ${name(op.payload.id)}: ${attributeText(op.payload.attributes)}`;
   return `${name(op.payload.fromId)} ${edgePhrase(op.payload.edgeType)} ${name(op.payload.toId)}`;
 }
+
+// "licence_gating" -> "licence gating". Shows the attributes an update sets, in plain words.
+const ATTRIBUTE_LABELS: Record<string, string> = {
+  licence_gating: "licence",
+  configuration_gating: "configuration",
+  deletion_detection: "deletion detection",
+  authoritative_source: "authoritative source",
+  empty_handling: "when empty",
+};
+function attributeText(attributes: Record<string, unknown>): string {
+  return Object.entries(attributes)
+    .filter(([k]) => k in ATTRIBUTE_LABELS)
+    .map(([k, v]) => `${ATTRIBUTE_LABELS[k]}: ${String(v)}`)
+    .join("; ");
+}
+
+export const MODE_LABELS = { request: "Business request", mandate: "External mandate" } as const;
+
+export const COVERAGE_LABELS = { addressed: "Addressed", not_applicable: "Not applicable", blocked: "Blocked" } as const;

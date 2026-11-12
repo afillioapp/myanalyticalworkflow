@@ -32,6 +32,12 @@ This file records how the app should look and feel, as stated by Alireza. Rule 1
 
 ---
 
+## The people board, stated by Alireza 2026-11-12
+
+> For team structure we should use something simple, like a card board: you add a department, then you add the members, simple as that. Then you can link them together.
+
+Columns are departments or teams, cards are roles or people, and a card is moved by dragging it. It is the simplest possible way to set up who is who: no forms and no diagrams. Planned in `plans/P4.md` section 1b.
+
 ## Tension to resolve
 
 **Several cards on one page against one decision per screen (DNA-03).** A page of cards could show many questions at once, which is what DNA-03 forbids.
@@ -53,3 +59,4 @@ Proposed resolution, not yet confirmed by Alireza: **one card is active, the res
 | Date | Change | By |
 |---|---|---|
 | 2026-11-12 | First version: direction stated, screen shape and style separated, one tension and three open questions recorded | Alireza (direction), Claude (recording) |
+| 2026-11-12 | The people board: columns and cards for team structure | Alireza (direction), Claude (recording) |

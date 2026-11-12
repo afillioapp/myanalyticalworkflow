@@ -173,6 +173,8 @@ export const TRIGGERS = [
   "defect",
 ] as const;
 export const REQUEST_STATUSES = ["open", "signed_off"] as const;
+// P4: a business request (someone asked for it) or an external mandate (a regulation).
+export const REQUEST_MODES = ["request", "mandate"] as const;
 
 export const requests = pgTable(
   "requests",
@@ -183,6 +185,11 @@ export const requests = pgTable(
     title: text("title").notNull(),
     body: text("body").notNull(),
     trigger: text("trigger"),
+    mode: text("mode"),
+    // The sponsor is a Role in the model. Not an edge: a sponsor belongs to this request.
+    sponsorId: uuid("sponsor_id"),
+    // Questions come in rounds of MAX_QUESTIONS; "ask more" opens the next round.
+    questionRounds: integer("question_rounds").notNull().default(1),
     status: text("status").notNull().default("open"),
     // Node ids the BSA tagged. A tag may point at a node that is still a pending change.
     tagged: jsonb("tagged").$type<string[]>().notNull().default([]),
@@ -193,6 +200,7 @@ export const requests = pgTable(
     index("requests_tenant_idx").on(t.tenantId),
     check("requests_trigger_check", sql`trigger is null or ${oneOf("trigger", TRIGGERS)}`),
     check("requests_status_check", oneOf("status", REQUEST_STATUSES)),
+    check("requests_mode_check", sql`mode is null or ${oneOf("mode", REQUEST_MODES)}`),
   ],
 );
 
@@ -206,7 +214,7 @@ export const solutionOptions = pgTable("solution_options", {
   createdAt: ts("created_at").notNull().defaultNow(),
 });
 
-export const ANSWER_KINDS = ["pick", "new", "unknown"] as const;
+export const ANSWER_KINDS = ["pick", "new", "unknown", "text"] as const;
 
 export const answers = pgTable(
   "answers",
@@ -228,7 +236,7 @@ export const answers = pgTable(
   ],
 );
 
-export const OPERATION_KINDS = ["add_node", "add_edge"] as const;
+export const OPERATION_KINDS = ["add_node", "add_edge", "update_node"] as const;
 
 // A pending change: an ordered step of a SolutionOption. Its payload is exactly the event
 // payload it becomes at sign-off, so promotion is a copy, not a translation.
@@ -248,5 +256,29 @@ export const operations = pgTable(
   (t) => [
     unique("operations_position_unique").on(t.optionId, t.position),
     check("operations_kind_check", oneOf("kind", OPERATION_KINDS)),
+  ],
+);
+
+// P4: the coverage verdict on one affected node in one request (F-10). A node touched by a
+// pending change counts as addressed without a row. "Not applicable" and "blocked" each add
+// a pending node (a Decision or an Issue); removing that change removes the verdict too.
+export const COVERAGE_STATES = ["addressed", "not_applicable", "blocked"] as const;
+
+export const coverage = pgTable(
+  "coverage",
+  {
+    id: uuid("id").primaryKey(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+    requestId: uuid("request_id").notNull().references(() => requests.id),
+    nodeId: uuid("node_id").notNull(),
+    state: text("state").notNull(),
+    reason: text("reason"),
+    operationId: uuid("operation_id"),
+    createdAt: ts("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    unique("coverage_one_per_node").on(t.requestId, t.nodeId),
+    check("coverage_state_check", oneOf("state", COVERAGE_STATES)),
+    check("coverage_reason_check", sql`state = 'addressed' or (reason is not null and length(trim(reason)) > 0)`),
   ],
 );

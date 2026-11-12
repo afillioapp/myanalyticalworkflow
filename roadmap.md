@@ -157,7 +157,7 @@ Decided by Alireza 2026-11-12, replacing the old P3 (onboarding) and folding in 
 
 **Plan:** `plans/P3.md`, approved by Alireza 2026-11-12 (rule 18). Decided with it: the FSRA Q&A is a Regulation node with `kind: guidance`; a breadcrumb, not a status bar; impact spreads 2 links out.
 
-**Status, 2026-11-12: built and live, waiting for you to use it against the exit gate.** Built before the P2 exit gate was judged, by Alireza's choice; that gate stays open.
+**Status, 2026-11-12: built and live. Accepted for now by Alireza: "very raw, but let's just go with it for now."** The exit gate is not formally passed; polish is deferred, per rule 17 and `design/visual-identity.md`. Built before the P2 exit gate was judged, by Alireza's choice; that gate stays open.
 
 | Criterion | Result | How it was checked |
 |---|---|---|
@@ -210,6 +210,8 @@ Known limits: answers can only add things, not change or remove what is already 
 
 ## P4: The SABS stress test. End of the committed v1 slice
 
+**Plan:** `plans/P4.md`, approved by Alireza 2026-11-12 with all nine recommendations (rule 18): obligations entered by hand; impact follows a regulation down its chain; coverage counts processes, systems, data, forms, products and rules; a `supports` edge; mode as its own question; questions in rounds of 5; a people board that edits the model directly, built first.
+
 **Objective.** Run the full SABS change through the same loop. This is real regulatory complexity: many coverages, forms and processes at once.
 
 **Build.** On top of the P3 slice:
@@ -234,6 +236,26 @@ Known limits: answers can only add things, not change or remove what is already 
 9. Every PH-01 row in the structure coverage register has a status, and every PH-01 gap has a decision.
 
 **Exit gate.** If P4 passes, the product thesis is proven and the rest is execution.
+
+**Status, 2026-11-12: built and live, waiting for you to use it against the exit gate.**
+
+| Criterion | Result | How it was checked |
+|---|---|---|
+| 1. Coverages, rating, forms, claims adjudication and broker channel, untold | Pass, with the limit below | Test: tag only the SABS regulation; all seven targets are reached, each with a path. Also seen on the running app's request page. Tagging a single step does not pull the regulation in |
+| 2. Priority of payment as a claims and coordination-of-benefits impact | Pass, with the limit below | Test: claims adjudication and the workplace benefits decision are reached through "Insurer pays medical and rehabilitation first", in the Claims lane |
+| 3. Integration questions: licence, configuration, deletion | Pass | Test: all three are asked about the policy admin to rating integration, and the answers are kept on the node |
+| 4. Coverage cannot be complete while anything is unaddressed | Pass | Test: the gate fails until every counted item has a verdict, and while one is blocked |
+| 5. Not applicable needs a reason, which lands in the decision log | Pass | Test: an empty reason is refused; a reason adds a Decision node |
+| 6. The gate blocks only on deterministic failures | Pass | Test: each failing check is named, sign-off is refused, then allowed once all pass |
+| 7. Impact on 300 nodes under two seconds | Pass | Test on the synthetic 300-node model |
+| 8. No insurance-only taxonomy changes | Pass | The one change is `supports`, Evidence to Symptom or CauseHypothesis, which applies to any industry |
+| 9. Every PH-01 row has a status, every gap a decision | Not yet | Rows ST-01-03, ST-01-10 and ST-01-14 updated as built. Four PH-01 gaps still need your decision: urgency (ST-01-06), the BSA's role (ST-01-15), working arrangements (ST-01-16), conflicting statements (ST-01-14) |
+
+**The limit on criteria 1 and 2.** The sample company is hand-built and the answer was known, so these tests partly check our own seed. Two links were added for them, each with a `source` attribute citing C-01, C-02 or C-04. The real proof is a change run against a model you built yourself.
+
+Also built, from the plan: mode as its own card; intake that keeps symptom, cause, evidence and solution apart, with a `supports` link; duties entered by hand in mandate mode; a Prior work card; questions in rounds of 5; and the people board (F-37) at `/people`.
+
+Known limits: answers still only add to the model. Coverage verdicts are one at a time, which takes a while on a large change (27 items for SABS). The "why" lines for a regulation are long, because they show the whole chain.
 
 **Blocked by.** P3.
 

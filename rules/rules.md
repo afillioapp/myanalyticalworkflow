@@ -156,6 +156,7 @@ My Analytical Work Flow/
     visual-identity.md
   plans/
     P3.md                   (the plan for each phase, rule 18)
+    P4.md
   structure/
     bsa-lifecycle-phases.md
     structure-coverage.md

@@ -24,6 +24,7 @@ export interface SeedEdge {
   from: string;
   to: string;
   via?: string;
+  attributes?: Record<string, unknown>;
 }
 
 export interface SeedBlock {
@@ -258,6 +259,20 @@ export const edges: SeedEdge[] = [
   { type: "governed_by", from: "coverage.med-rehab", to: "rule.insurer-first-payor" },
   { type: "governed_by", from: "step.adjudicate-rehab", to: "rule.insurer-first-payor" },
   { type: "governed_by", from: "coverage.income-replacement", to: "rule.ir-optional" },
+  // Added 2026-11-12 for P4 (plans/P4.md section 3). The sample company is hand-built and
+  // the SABS answer is known, so these links partly test the seed itself. Each cites why.
+  {
+    type: "governed_by",
+    from: "field.ir-selection",
+    to: "rule.ir-optional",
+    attributes: { source: "C-01, C-04: income replacement became optional on 2026-07-01; OPCF 47R records the selection" },
+  },
+  {
+    type: "governed_by",
+    from: "step.select-benefits",
+    to: "rule.ir-optional",
+    attributes: { source: "C-01, C-02: optional benefits are chosen when the policy is quoted" },
+  },
   { type: "derived_from", from: "rule.insurer-first-payor", to: "obl.insurer-first-payor" },
   { type: "derived_from", from: "rule.ir-optional", to: "obl.offer-ir-optional" },
   { type: "derived_from", from: "rule.insurer-first-payor", to: "reg.sabs-2026" },
@@ -268,6 +283,7 @@ export const edges: SeedEdge[] = [
   { type: "traces_to", from: "ac.payor-order", to: "req.fr-001" },
   { type: "traces_to", from: "test.rehab-with-workplace", to: "req.fr-001" },
   { type: "constrains", from: "constraint.sabs-date", to: "rule.ir-optional" },
+  { type: "supports", from: "evidence.held-invoices", to: "symptom.rehab-held" },
 ];
 
 export const documents: SeedDocument[] = [

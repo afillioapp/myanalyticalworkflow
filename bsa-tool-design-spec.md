@@ -149,6 +149,7 @@ This is the foundational decision. Everything generated downstream is wrong in t
 | implements | Requirement | change on a node |
 | traces_to | AcceptanceCriterion, TestScenario | Requirement |
 | constrains | Constraint | any node. Added 2026-10-30 |
+| supports | Evidence | Symptom, CauseHypothesis. Added 2026-11-12 (plans/P4.md decision 5) |
 | impacts | computed at query time, never stored |
 
 A **handoff** is not a node or a stored edge. It is any edge crossing a department lane. Handoffs are where things break, so the UI should surface them automatically.

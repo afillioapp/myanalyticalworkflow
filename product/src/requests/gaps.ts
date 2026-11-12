@@ -6,7 +6,9 @@
 import type { EdgeType, NodeType } from "@/model/taxonomy";
 import type { Working } from "./working";
 
-export interface GapRule {
+// A missing link. The answer is a pick from the model, or something new.
+export interface EdgeGapRule {
+  kind: "edge";
   id: string;
   appliesTo: readonly NodeType[];
   edge: EdgeType;
@@ -17,9 +19,21 @@ export interface GapRule {
   question: (name: string) => string;
 }
 
+// P4: a missing attribute (design spec section 4c). The answer is text, stored on the node.
+export interface AttributeGapRule {
+  kind: "attribute";
+  id: string;
+  appliesTo: readonly NodeType[];
+  attribute: string;
+  question: (name: string) => string;
+}
+
+export type GapRule = EdgeGapRule | AttributeGapRule;
+
 // In priority order: the first gap found by the earliest rule is asked first.
 export const GAP_RULES: readonly GapRule[] = [
   {
+    kind: "edge",
     id: "obligation-owner",
     appliesTo: ["Obligation"],
     edge: "owns",
@@ -28,6 +42,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Who is responsible for “${n}”?`,
   },
   {
+    kind: "edge",
     id: "obligation-source",
     appliesTo: ["Obligation"],
     edge: "derived_from",
@@ -36,6 +51,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Which regulation or guidance does “${n}” come from?`,
   },
   {
+    kind: "edge",
     id: "obligation-met-by",
     appliesTo: ["Obligation"],
     edge: "derived_from",
@@ -44,6 +60,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Which business rule meets “${n}”?`,
   },
   {
+    kind: "edge",
     id: "rule-source",
     appliesTo: ["BusinessRule"],
     edge: "derived_from",
@@ -52,6 +69,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Where does the rule “${n}” come from?`,
   },
   {
+    kind: "edge",
     id: "rule-applies-to",
     appliesTo: ["BusinessRule"],
     edge: "governed_by",
@@ -60,6 +78,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Which steps or coverages does the rule “${n}” apply to?`,
   },
   {
+    kind: "edge",
     id: "owner",
     appliesTo: ["Process", "System", "Product", "Regulation"],
     edge: "owns",
@@ -68,6 +87,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Who is responsible for “${n}”?`,
   },
   {
+    kind: "edge",
     id: "step-performer",
     appliesTo: ["ProcessStep"],
     edge: "performed_by",
@@ -76,6 +96,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `Who does “${n}”?`,
   },
   {
+    kind: "edge",
     id: "step-system",
     appliesTo: ["ProcessStep"],
     edge: "executed_in",
@@ -84,6 +105,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `In which system is “${n}” done?`,
   },
   {
+    kind: "edge",
     id: "step-process",
     appliesTo: ["ProcessStep"],
     edge: "part_of",
@@ -91,7 +113,45 @@ export const GAP_RULES: readonly GapRule[] = [
     answer: ["Process"],
     question: (n) => `Which process is “${n}” part of?`,
   },
+  // Design spec section 4c: the three Integration questions that belong on every integration,
+  // and two DataField questions that catch real defects.
   {
+    kind: "attribute",
+    id: "integration-licence",
+    appliesTo: ["Integration"],
+    attribute: "licence_gating",
+    question: (n) => `Is “${n}” available on the licence tier we have, or does it need a paid module or add-on?`,
+  },
+  {
+    kind: "attribute",
+    id: "integration-configuration",
+    appliesTo: ["Integration"],
+    attribute: "configuration_gating",
+    question: (n) => `Does “${n}” rely on anything that only works when a specific configuration setting is switched on?`,
+  },
+  {
+    kind: "attribute",
+    id: "integration-deletion",
+    appliesTo: ["Integration"],
+    attribute: "deletion_detection",
+    question: (n) => `How do we find out through “${n}” that a record was deleted on the other side, if it shows no deleted flag?`,
+  },
+  {
+    kind: "attribute",
+    id: "field-source",
+    appliesTo: ["DataField"],
+    attribute: "authoritative_source",
+    question: (n) => `Which system is the authoritative source for “${n}”, the one that wins when two disagree?`,
+  },
+  {
+    kind: "attribute",
+    id: "field-empty",
+    appliesTo: ["DataField"],
+    attribute: "empty_handling",
+    question: (n) => `Can “${n}” be empty even when the screen makes it mandatory, and what happens then?`,
+  },
+  {
+    kind: "edge",
     id: "process-trigger",
     appliesTo: ["Process"],
     edge: "triggers",
@@ -100,6 +160,7 @@ export const GAP_RULES: readonly GapRule[] = [
     question: (n) => `What starts “${n}”?`,
   },
   {
+    kind: "edge",
     id: "role-home",
     appliesTo: ["Role"],
     edge: "member_of",
@@ -109,6 +170,7 @@ export const GAP_RULES: readonly GapRule[] = [
   },
 ];
 
+// Questions come in rounds of this many (plans/P4.md decision 7). "Ask more" opens the next round.
 export const MAX_QUESTIONS = 5;
 
 export interface Gap {
@@ -137,11 +199,14 @@ export function findGaps(model: Working, nodeIds: string[], skip: ReadonlySet<st
       if (!rule.appliesTo.includes(node.type)) continue;
       const key = gapKey(rule.id, id);
       if (skip.has(key) || recorded.has(key)) continue;
-      const filled = model.edges.some((e) => {
-        if (e.type !== rule.edge) return false;
-        const other = rule.direction === "out" ? (e.from === id ? e.to : null) : e.to === id ? e.from : null;
-        return other !== null && rule.answer.includes(nodes.get(other)?.type as NodeType);
-      });
+      const filled =
+        rule.kind === "attribute"
+          ? String(node.attributes[rule.attribute] ?? "").trim() !== ""
+          : model.edges.some((e) => {
+              if (e.type !== rule.edge) return false;
+              const other = rule.direction === "out" ? (e.from === id ? e.to : null) : e.to === id ? e.from : null;
+              return other !== null && rule.answer.includes(nodes.get(other)?.type as NodeType);
+            });
       if (!filled) gaps.push({ rule, nodeId: id, question: rule.question(node.name) });
     }
   }
@@ -149,6 +214,6 @@ export function findGaps(model: Working, nodeIds: string[], skip: ReadonlySet<st
 }
 
 // The edge an answer creates: from the affected node to the pick, or the other way round.
-export function edgeFor(rule: GapRule, nodeId: string, pickId: string): { from: string; to: string } {
+export function edgeFor(rule: EdgeGapRule, nodeId: string, pickId: string): { from: string; to: string } {
   return rule.direction === "out" ? { from: nodeId, to: pickId } : { from: pickId, to: nodeId };
 }

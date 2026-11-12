@@ -69,6 +69,7 @@ The structure coverage register is the reverse view of this file. This file asks
 | F-33 Overview tab | OVERVIEW | All | PP-02 | One place showing every active request, its phase and its next action, so nothing is rediscovered |
 | F-34 Analytical tab | ANALYTICS | PH-04, PH-24 | PP-07 | Cycle time, questions caught before build, coverage at sign off. Gives the analyst evidence of their own impact |
 | F-35 Request trigger selection | INTAKE | PH-01 | None. Justified by ST-01-02, see below | One question at intake: what triggered this? The analyst picks one of seven: customer problem, regulatory change, operational inefficiency, system replacement, new product, audit finding, defect |
+| F-37 People board | MODEL | PH-01, PH-05 | PP-22 | Departments and teams as columns, roles and people as cards. Drag to move, link who reports to whom. The confirm-rename-remove step for the starter template (design spec section 3). Edits the model directly, as events. Proposed by Alireza 2026-11-12, built in P4 |
 | F-36 Compliance library with versions | COMPLIANCE | PH-01, PH-08 | PP-37 | Regulatory and legal documents live in one place, not inside a single request. Uploading a new version keeps the old one, shows what changed, and points at the obligations and nodes the change touches. A new version is a regulatory-change trigger (F-35) for a mandate request (F-07). Proposed by Alireza 2026-11-11 while collecting the P1 corpus. Design spec section 6f |
 
 ## Unaddressed pain points

@@ -417,3 +417,61 @@ button.link { border: none; background: none; padding: 0; color: var(--select); 
   .page { padding: 14px 16px 48px; }
   .quiet-summary { display: none; }
 }
+
+/* ---- P4: the people board ---------------------------------------------------------------- */
+
+.board-page { padding: 16px; }
+.board-help { margin: 0 0 12px; }
+.board {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+.board.busy { opacity: 0.7; }
+.b-col {
+  flex: 0 0 260px;
+  box-sizing: border-box;
+  background: var(--lane-b);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.b-col.over { border-color: var(--select); box-shadow: 0 0 0 2px var(--select) inset; }
+.b-col.unplaced { border-style: dashed; }
+.b-col-head { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; }
+.b-col-title { font: inherit; font-weight: 700; background: none; border: none; padding: 0; color: var(--foreground); cursor: pointer; text-align: left; }
+.b-sub { margin: -6px 4px 0; }
+.b-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; min-height: 8px; }
+.b-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; cursor: grab; }
+.b-card.open { border-color: var(--select); }
+.b-card-head {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 9px 11px;
+  color: var(--foreground);
+  cursor: inherit;
+}
+.b-card-body { display: flex; flex-direction: column; gap: 8px; padding: 0 11px 11px; }
+.b-card-body input[name="name"] { min-width: 0; }
+.b-add { display: flex; gap: 6px; }
+.b-add input { flex: 1; min-width: 0; }
+.b-add select { padding: 7px 4px; }
+.add-col { background: transparent; border-style: dashed; }
+.add-col input { width: 100%; box-sizing: border-box; }
+
+.gate li.pass { color: var(--muted); }
+.gate li.fail { color: var(--foreground); font-weight: 600; }
+.gate li.fail span[aria-hidden] { color: var(--handoff); }
+.gate li.pass span[aria-hidden] { color: var(--layer-system); }

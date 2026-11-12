@@ -5,15 +5,24 @@
 
 import { redirect } from "next/navigation";
 import { getDb } from "@/db/server";
+import type { IntakeStep } from "@/requests/intake";
 import {
   addNode,
+  addObligation,
   answer,
+  askMore,
+  clearCoverage,
   createRequest,
   currentWorkspace,
+  recordIntake,
   removeOperation,
   RequestError,
+  setCoverage,
+  setMode,
+  setSponsor,
   setTrigger,
   signOff,
+  skipIntake,
   startWorkspace,
   tag,
   untag,
@@ -62,7 +71,66 @@ export async function newRequest(form: FormData) {
 
 export async function chooseTrigger(form: FormData) {
   const { db, actor } = await context();
-  await onRequest(form, "touches", (id) => setTrigger(db, actor, id, field(form, "trigger")));
+  await onRequest(form, "mode", (id) => setTrigger(db, actor, id, field(form, "trigger")));
+}
+
+export async function chooseMode(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => setMode(db, actor, id, field(form, "mode")));
+}
+
+export async function chooseSponsor(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => setSponsor(db, actor, id, field(form, "sponsorId")));
+}
+
+export async function chooseRegulation(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => tag(db, actor, id, field(form, "nodeId")));
+}
+
+export async function newRegulation(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => addNode(db, actor, id, "Regulation", field(form, "name")));
+}
+
+export async function intakeText(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) =>
+    recordIntake(db, actor, id, field(form, "step") as IntakeStep, field(form, "text"), { baseline: field(form, "baseline") }),
+  );
+}
+
+export async function intakeSkip(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => skipIntake(db, actor, id, field(form, "step") as IntakeStep));
+}
+
+export async function newObligation(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "intake", (id) => addObligation(db, actor, id, field(form, "name")));
+}
+
+export async function answerText(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "questions", (id) =>
+    answer(db, actor, id, field(form, "ruleId"), field(form, "nodeId"), { kind: "text", value: field(form, "value") }),
+  );
+}
+
+export async function askMoreQuestions(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "questions", (id) => askMore(db, actor, id));
+}
+
+export async function coverageVerdict(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "coverage", (id) => setCoverage(db, actor, id, field(form, "nodeId"), field(form, "state"), field(form, "reason")));
+}
+
+export async function coverageUndo(form: FormData) {
+  const { db, actor } = await context();
+  await onRequest(form, "coverage", (id) => clearCoverage(db, actor, id, field(form, "nodeId")));
 }
 
 export async function tagNode(form: FormData) {

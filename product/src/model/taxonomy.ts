@@ -103,6 +103,9 @@ export const EDGE_TYPES = {
   traces_to: { from: ["AcceptanceCriterion", "TestScenario"], to: ["Requirement"] },
   // Added 2026-10-30 (ST-01-12).
   constrains: { from: ["Constraint"], to: "*" },
+  // Added 2026-11-12 (plans/P4.md decision 5): a hypothesis stays a hypothesis until
+  // evidence supports it (design spec section 6), so the support is a visible link.
+  supports: { from: ["Evidence"], to: ["Symptom", "CauseHypothesis"] },
 } as const satisfies Record<string, EdgeRule>;
 
 export type EdgeType = keyof typeof EDGE_TYPES;
