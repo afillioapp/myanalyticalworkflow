@@ -1,9 +1,14 @@
 import type { EdgeType, NodeType } from "@/model/taxonomy";
 
-// A small hand-written model of a fictional Ontario personal auto carrier, built around
-// the SABS change in bsa-tool-design-spec.md section 11. Generic and public only: no
-// real carrier, system or person. The governance nodes (symptom, requirements, risks
-// and so on) are illustrative fixtures, not findings.
+// A small hand-written model of a fictional Ontario auto carrier, built around the SABS
+// change in bsa-tool-design-spec.md section 11. Generic and public only: no real carrier,
+// system or person. The governance nodes (symptom, requirements, risks and so on) are
+// illustrative fixtures, not findings.
+//
+// Added 2026-11-12 for P3 (plans/P3.md section 3): the starter template (main departments
+// and delivery roles, design spec section 3) and a small rideshare fleet business, so the
+// FSRA rideshare notification request (C-02) can be worked. The fleet product, processes and
+// form are fictional choices; the facts about FSRA's Q&A come from C-02.
 //
 // Keys are stable and turn into stable UUIDs, so the seed loads to the same IDs every time.
 
@@ -50,6 +55,20 @@ export const nodes: SeedNode[] = [
   { key: "role.compliance-officer", type: "Role", name: "Compliance Officer" },
   { key: "role.claims-manager", type: "Role", name: "Claims Manager" },
   { key: "person.analyst", type: "Person", name: "Example Analyst" },
+  // Starter template: the main departments and the delivery roles (design spec section 3).
+  { key: "dept.underwriting", type: "Department", name: "Underwriting" },
+  { key: "dept.distribution", type: "Department", name: "Distribution" },
+  { key: "dept.finance", type: "Department", name: "Finance" },
+  { key: "dept.it", type: "Department", name: "IT" },
+  { key: "team.delivery", type: "Team", name: "Delivery team" },
+  { key: "role.sponsor", type: "Role", name: "Sponsor" },
+  { key: "role.product-owner", type: "Role", name: "Product Owner" },
+  { key: "role.bsa", type: "Role", name: "Business Systems Analyst" },
+  { key: "role.qa", type: "Role", name: "QA Analyst" },
+  { key: "role.developer", type: "Role", name: "Developer" },
+  { key: "role.architect", type: "Role", name: "Architect" },
+  { key: "role.release-authority", type: "Role", name: "Release Authority" },
+  { key: "role.underwriter", type: "Role", name: "Underwriter" },
   { key: "party.fsra", type: "ExternalParty", name: "FSRA", attributes: { kind: "regulator" } },
   { key: "party.broker", type: "ExternalParty", name: "Example Broker Network", attributes: { kind: "broker" } },
 
@@ -60,6 +79,10 @@ export const nodes: SeedNode[] = [
   { key: "step.rate-quote", type: "ProcessStep", name: "Rate the quote" },
   { key: "step.adjudicate-rehab", type: "ProcessStep", name: "Adjudicate medical and rehabilitation expense" },
   { key: "dp.workplace-benefits", type: "DecisionPoint", name: "Does the claimant have workplace benefits?" },
+  { key: "proc.policy-change", type: "Process", name: "Policy change" },
+  { key: "step.change-optional-benefits", type: "ProcessStep", name: "Change optional benefits" },
+  { key: "proc.renewal", type: "Process", name: "Renewal" },
+  { key: "step.renew-existing", type: "ProcessStep", name: "Renew with existing coverages" },
 
   // Systems
   { key: "sys.policy-admin", type: "System", name: "Policy Administration System" },
@@ -74,6 +97,8 @@ export const nodes: SeedNode[] = [
   { key: "field.ir-selection", type: "DataField", name: "Income replacement selection" },
   { key: "field.payor-order", type: "DataField", name: "Payor order" },
   { key: "form.opcf-47r", type: "Form", name: "OPCF 47R" },
+  { key: "field.optional-ab", type: "DataField", name: "Optional accident benefits selection" },
+  { key: "form.rideshare-endorsement", type: "Form", name: "Rideshare fleet endorsement (non-standard)" },
 
   // Business
   { key: "product.on-auto", type: "Product", name: "Ontario personal auto" },
@@ -94,11 +119,31 @@ export const nodes: SeedNode[] = [
     name: "Income replacement is an optional benefit",
     attributes: { effective_date: "2026-07-01" },
   },
+  { key: "product.rideshare-fleet", type: "Product", name: "Ontario rideshare fleet auto" },
+  { key: "coverage.caregiver", type: "Coverage", name: "Caregiver benefit", attributes: { mandatory: false } },
+  {
+    key: "coverage.housekeeping",
+    type: "Coverage",
+    name: "Housekeeping and home maintenance benefit",
+    attributes: { mandatory: false },
+  },
+  {
+    key: "rule.renewal-keeps-coverage",
+    type: "BusinessRule",
+    name: "Renewal keeps the same coverages and limits unless the customer agrees in writing",
+  },
   { key: "channel.broker", type: "Channel", name: "Broker" },
   { key: "channel.direct", type: "Channel", name: "Direct" },
 
   // Governance and output
   { key: "reg.sabs-2026", type: "Regulation", name: "SABS changes effective 2026-07-01", attributes: { effective_date: "2026-07-01" } },
+  // Guidance, not a regulation: decided 2026-11-12 to model it as a Regulation with kind guidance.
+  {
+    key: "reg.fsra-qa",
+    type: "Regulation",
+    name: "FSRA SABS optionality Q&A for insurers",
+    attributes: { kind: "guidance", updated: "2026-10-14", source: "C-02" },
+  },
   { key: "obl.insurer-first-payor", type: "Obligation", name: "Pay medical and rehabilitation expenses first, except medication, even where workplace benefits exist" },
   { key: "obl.offer-ir-optional", type: "Obligation", name: "Offer income replacement as an optional benefit" },
   { key: "symptom.rehab-held", type: "Symptom", name: "Rehabilitation invoices are held waiting for workplace benefit details" },
@@ -155,6 +200,31 @@ export const edges: SeedEdge[] = [
   { type: "member_of", from: "role.ab-adjuster", to: "team.ab-claims" },
   { type: "member_of", from: "role.claims-manager", to: "dept.claims" },
   { type: "member_of", from: "role.compliance-officer", to: "dept.compliance" },
+  { type: "member_of", from: "team.delivery", to: "dept.it" },
+  { type: "member_of", from: "role.product-owner", to: "team.delivery" },
+  { type: "member_of", from: "role.bsa", to: "team.delivery" },
+  { type: "member_of", from: "role.qa", to: "team.delivery" },
+  { type: "member_of", from: "role.developer", to: "team.delivery" },
+  { type: "member_of", from: "role.architect", to: "team.delivery" },
+  { type: "member_of", from: "role.release-authority", to: "dept.it" },
+  { type: "member_of", from: "role.underwriter", to: "dept.underwriting" },
+  { type: "owns", from: "role.underwriter", to: "proc.policy-change" },
+  { type: "owns", from: "role.product-manager", to: "product.rideshare-fleet" },
+  { type: "owns", from: "role.compliance-officer", to: "reg.fsra-qa" },
+  { type: "approves", from: "role.compliance-officer", to: "form.rideshare-endorsement" },
+  { type: "performed_by", from: "step.change-optional-benefits", to: "role.underwriter" },
+  { type: "executed_in", from: "step.change-optional-benefits", to: "sys.policy-admin" },
+  { type: "executed_in", from: "step.renew-existing", to: "sys.policy-admin" },
+  { type: "part_of", from: "step.change-optional-benefits", to: "proc.policy-change" },
+  { type: "part_of", from: "step.renew-existing", to: "proc.renewal" },
+  { type: "triggers", from: "channel.broker", to: "proc.policy-change" },
+  { type: "writes", from: "step.change-optional-benefits", to: "field.optional-ab" },
+  { type: "belongs_to", from: "field.optional-ab", to: "entity.policy" },
+  { type: "renders_on", from: "field.optional-ab", to: "form.rideshare-endorsement" },
+  { type: "belongs_to", from: "coverage.caregiver", to: "product.rideshare-fleet" },
+  { type: "belongs_to", from: "coverage.housekeeping", to: "product.rideshare-fleet" },
+  { type: "governed_by", from: "step.renew-existing", to: "rule.renewal-keeps-coverage" },
+  { type: "derived_from", from: "rule.renewal-keeps-coverage", to: "reg.fsra-qa" },
   { type: "owns", from: "role.product-manager", to: "product.on-auto" },
   { type: "owns", from: "role.compliance-officer", to: "obl.insurer-first-payor" },
   { type: "owns", from: "role.compliance-officer", to: "reg.sabs-2026" },

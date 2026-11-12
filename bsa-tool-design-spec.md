@@ -382,6 +382,8 @@ Proposed by Alireza while collecting the P1 corpus by hand: finding each regulat
 
 ## 7. UI and UX direction
 
+**Added 2026-11-12:** the screen shape and visual style stated by Alireza are in `design/visual-identity.md`: one page per change, cards on the page for its questions and clarifications, a breadcrumb or status bar, and highlight-focused, minimalist, scannable styling. Open there: whether the graph is the main surface, as below, or a supporting view from the request page.
+
 The reference point is Obsidian's graph aesthetic, but Obsidian is force directed, which means position means nothing. For analysis, position has to carry meaning. The right model is a swimlane diagram rendered with graph aesthetics.
 
 - **Horizontal axis is flow.** Left to right is sequence, time, handoff.

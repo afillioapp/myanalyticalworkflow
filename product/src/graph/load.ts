@@ -1,10 +1,10 @@
-// Loads the graph for the page. With a database it reads the seed tenant's model. Without one,
-// or while that tenant is still empty, it draws the hand-written sample model straight from
-// the seed file, so nothing is written to production just to have something to show.
+// Loads the graph for the model page: the current workspace's model, or, before anyone has
+// loaded the sample company, the hand-written sample drawn straight from the seed file.
 
-import { connect, type Connection } from "@/db/client";
+import { getDb } from "@/db/server";
 import { readModel } from "@/model/read";
-import { seedActor, seedId } from "@/model/seed";
+import { seedId } from "@/model/seed";
+import { currentWorkspace } from "@/requests/store";
 import { layerOf, type EdgeType, type Layer, type NodeType, type Source } from "@/model/taxonomy";
 import * as seed from "../../seed/company-model";
 import type { Graph } from "./model";
@@ -35,31 +35,25 @@ export function sampleGraph(): Graph {
   };
 }
 
-let connection: Promise<Connection> | undefined;
-
+// The current workspace's model. With no workspace yet, the sample model from the seed file.
 export async function loadGraph(): Promise<LoadedGraph> {
-  if (!process.env.DATABASE_URL) return { graph: sampleGraph(), origin: "sample" };
-  try {
-    connection ??= connect(process.env.DATABASE_URL);
-    const model = await readModel((await connection).db, seedActor.tenantId);
-    if (model.nodes.length === 0) return { graph: sampleGraph(), origin: "sample" };
-    return {
-      origin: "database",
-      graph: {
-        nodes: model.nodes.map((n) => ({
-          id: n.id,
-          type: n.type as NodeType,
-          layer: n.layer as Layer,
-          name: n.name,
-          source: n.source as Source,
-          confidence: n.confidence,
-          verified: n.verifiedAt !== null,
-        })),
-        edges: model.edges.map((e) => ({ id: e.id, type: e.type as EdgeType, from: e.fromId, to: e.toId, via: e.viaId })),
-      },
-    };
-  } catch (error) {
-    connection = undefined;
-    throw error;
-  }
+  const db = await getDb();
+  const actor = await currentWorkspace(db);
+  if (!actor) return { graph: sampleGraph(), origin: "sample" };
+  const model = await readModel(db, actor.tenantId);
+  return {
+    origin: "database",
+    graph: {
+      nodes: model.nodes.map((n) => ({
+        id: n.id,
+        type: n.type as NodeType,
+        layer: n.layer as Layer,
+        name: n.name,
+        source: n.source as Source,
+        confidence: n.confidence,
+        verified: n.verifiedAt !== null,
+      })),
+      edges: model.edges.map((e) => ({ id: e.id, type: e.type as EdgeType, from: e.fromId, to: e.toId, via: e.viaId })),
+    },
+  };
 }

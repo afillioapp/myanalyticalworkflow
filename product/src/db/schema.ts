@@ -149,3 +149,104 @@ export const documentBlocks = pgTable(
     ),
   ],
 );
+
+// P3: requests and their pending changes (design spec section 5, plans/P3.md section 4).
+// These sit beside the model, never inside it. Nothing here changes nodes or edges until a
+// request is signed off, when its option's operations are committed as ordinary events.
+
+// A workspace is one copy of the sample company. Reset starts a new one, because the event
+// log is append-only and cannot be emptied. The newest workspace is the current one.
+export const workspaces = pgTable("workspaces", {
+  id: uuid("id").primaryKey(),
+  tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+  userId: uuid("user_id").notNull().references(() => users.id),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const TRIGGERS = [
+  "customer_problem",
+  "regulatory_change",
+  "operational_inefficiency",
+  "system_replacement",
+  "new_product",
+  "audit_finding",
+  "defect",
+] as const;
+export const REQUEST_STATUSES = ["open", "signed_off"] as const;
+
+export const requests = pgTable(
+  "requests",
+  {
+    id: uuid("id").primaryKey(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    trigger: text("trigger"),
+    status: text("status").notNull().default("open"),
+    // Node ids the BSA tagged. A tag may point at a node that is still a pending change.
+    tagged: jsonb("tagged").$type<string[]>().notNull().default([]),
+    createdAt: ts("created_at").notNull().defaultNow(),
+    signedOffAt: ts("signed_off_at"),
+  },
+  (t) => [
+    index("requests_tenant_idx").on(t.tenantId),
+    check("requests_trigger_check", sql`trigger is null or ${oneOf("trigger", TRIGGERS)}`),
+    check("requests_status_check", oneOf("status", REQUEST_STATUSES)),
+  ],
+);
+
+// One SolutionOption per request in P3. The table allows several, so options later are not a rewrite.
+export const solutionOptions = pgTable("solution_options", {
+  id: uuid("id").primaryKey(),
+  tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+  requestId: uuid("request_id").notNull().references(() => requests.id),
+  name: text("name").notNull(),
+  promotedAt: ts("promoted_at"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const ANSWER_KINDS = ["pick", "new", "unknown"] as const;
+
+export const answers = pgTable(
+  "answers",
+  {
+    id: uuid("id").primaryKey(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+    requestId: uuid("request_id").notNull().references(() => requests.id),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    // Which gap rule asked, about which node. Together they stop a question coming back.
+    ruleId: text("rule_id").notNull(),
+    nodeId: uuid("node_id").notNull(),
+    kind: text("kind").notNull(),
+    note: text("note"),
+    createdAt: ts("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    unique("answers_one_per_gap").on(t.requestId, t.ruleId, t.nodeId),
+    check("answers_kind_check", oneOf("kind", ANSWER_KINDS)),
+  ],
+);
+
+export const OPERATION_KINDS = ["add_node", "add_edge"] as const;
+
+// A pending change: an ordered step of a SolutionOption. Its payload is exactly the event
+// payload it becomes at sign-off, so promotion is a copy, not a translation.
+export const operations = pgTable(
+  "operations",
+  {
+    id: uuid("id").primaryKey(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenants.id),
+    optionId: uuid("option_id").notNull().references(() => solutionOptions.id),
+    position: integer("position").notNull(),
+    kind: text("kind").notNull(),
+    payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+    // The answer that caused it, for traceability. Null when the BSA added it directly.
+    answerId: uuid("answer_id").references(() => answers.id),
+    createdAt: ts("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    unique("operations_position_unique").on(t.optionId, t.position),
+    check("operations_kind_check", oneOf("kind", OPERATION_KINDS)),
+  ],
+);

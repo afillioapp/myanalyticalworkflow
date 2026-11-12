@@ -54,13 +54,13 @@ Guide section 2. Phase outcome: problem statement, stakeholder list. Questions: 
 | ID | Guide step | Outcome when done | Status | Where, or what is missing |
 |---|---|---|---|---|
 | ST-01-01 | Receive the assignment | Who assigned the work is known | Gap | Intake names a sponsor but not who assigned the work. Not the same person |
-| ST-01-02 | Clarify the request: what triggered it | The trigger is recorded: customer problem, regulatory change, operational inefficiency, system replacement, new product, audit finding, or defect | Covered | F-35, accepted by Alireza 2026-10-28. Not yet built: lands in P4 intake |
+| ST-01-02 | Clarify the request: what triggered it | The trigger is recorded: customer problem, regulatory change, operational inefficiency, system replacement, new product, audit finding, or defect | Covered | F-35, accepted by Alireza 2026-10-28. Built in P3, 2026-11-12: the trigger card on the request page, one choice from the seven |
 | ST-01-03 | Identify the sponsor | A named sponsor who owns the outcome | Covered | Intake exit condition "sponsor named", design spec 6b. Enforced by F-19 |
 | ST-01-04 | Identify the product or system owner | Each affected system has a named owner | Partial | The `owns` edge holds ownership in the model, F-01. Intake does not ask for it. An unowned system is caught only by the Quality Gate Control "no owner" check |
 | ST-01-05 | Review the intake material | The intake material is attached to the request | Partial | A regulatory notice is uploaded in mandate mode, F-07 and F-08. No other kind of intake material can be attached. F-36, proposed 2026-11-11, would keep regulatory documents as standing, versioned sources, so they are already there at intake. Still Partial: it covers regulations, not other intake material |
 | ST-01-06 | Understand the urgency | A deadline, the reason for it, and whether it is regulatory or preferred | Gap | F-26 dates business rules, not requests. A request has no deadline, reason or flag |
 | ST-01-07 | Identify the affected business area | Affected departments are known | Covered | Touched nodes tagged at intake sit in department lanes, F-01 and F-22 |
-| ST-01-08 | Identify potentially affected systems | A list of systems possibly affected | Covered | F-09 impact traversal |
+| ST-01-08 | Identify potentially affected systems | A list of systems possibly affected | Covered | F-09 impact traversal. Built in P3, 2026-11-12: tagged nodes plus everything two links out, each with the reason |
 | ST-01-09 | Review existing documentation | The relevant existing documents are listed | Partial | F-02 ingests documents at onboarding. No per-request review step |
 | ST-01-10 | Review existing work | Related prior requirements, decisions and open issues are found | Partial | F-05 searches the graph and request history. Jira and Confluence are excluded by design spec section 9 |
 | ST-01-11 | Understand the current environment | Each system's state is known: in production, migrating, being configured, or built from scratch | Partial | The Environment node type exists, F-01. Nothing records which of the four states a system is in |

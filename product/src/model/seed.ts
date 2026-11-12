@@ -12,7 +12,10 @@ export const seedActor: Actor = { tenantId: seedId(seed.tenant.key), userId: see
 
 // Turns the hand-written model into events and commits them, so the seed goes through
 // the same log as every other change. Seeded nodes are marked "imported", unverified.
-export function seedEvents(): ModelEventInput[] {
+// `idOf` turns a seed key into an id. The default gives the fixed seed tenant's ids. A
+// workspace passes its own, so each copy of the sample company has ids of its own.
+export function seedEvents(idOf: (key: string) => string = seedId): ModelEventInput[] {
+  const seedId = idOf;
   const nodeEvents: ModelEventInput[] = seed.nodes.map((n) => ({
     type: "node.created",
     payload: {
@@ -51,9 +54,13 @@ export function seedEvents(): ModelEventInput[] {
   return [...nodeEvents, ...edgeEvents, ...documentEvents];
 }
 
-export async function loadSeed(db: Db): Promise<Actor> {
-  await db.insert(tenants).values({ id: seedActor.tenantId, name: seed.tenant.name });
-  await db.insert(users).values({ id: seedActor.userId, tenantId: seedActor.tenantId, name: seed.user.name });
-  await commit(db, seedActor, seedEvents());
-  return seedActor;
+export async function loadSeed(
+  db: Db,
+  actor: Actor = seedActor,
+  idOf: (key: string) => string = seedId,
+): Promise<Actor> {
+  await db.insert(tenants).values({ id: actor.tenantId, name: seed.tenant.name });
+  await db.insert(users).values({ id: actor.userId, tenantId: actor.tenantId, name: seed.user.name });
+  await commit(db, actor, seedEvents(idOf));
+  return actor;
 }

@@ -1,6 +1,6 @@
 import { asc, isNull } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
-import type { Db } from "@/db/client";
+import type { Db, Executor } from "@/db/client";
 import { documentBlocks, documents, edges, events, nodes } from "@/db/schema";
 import { applyEvent } from "./apply";
 import { modelEvent, type ModelEventInput } from "./events";
@@ -12,7 +12,8 @@ export interface Actor {
 
 // The only way to change the model: append events and project them, in one transaction.
 // If any event is invalid, nothing is written.
-export async function commit(db: Db, actor: Actor, inputs: ModelEventInput[]): Promise<void> {
+// Takes a transaction too, so sign-off can commit events and close the request atomically.
+export async function commit(db: Executor, actor: Actor, inputs: ModelEventInput[]): Promise<void> {
   const parsed = inputs.map((input) => modelEvent.parse(input));
   await db.transaction(async (tx) => {
     for (const event of parsed) {

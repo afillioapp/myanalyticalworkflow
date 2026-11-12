@@ -155,9 +155,27 @@ Exit gate, still yours to judge: looking at the model, do you understand it fast
 
 Decided by Alireza 2026-11-12, replacing the old P3 (onboarding) and folding in the core of the old P4. Thin vertical slice first, detail after (rule 17).
 
-**Objective.** Prove the whole loop once, end to end, on the insurance sample model: request in, impact out, the right questions asked, a proposed change signed off and written back, so the next request starts from the updated model. No AI. Everything in the slice is computed from the graph.
+**Plan:** `plans/P3.md`, approved by Alireza 2026-11-12 (rule 18). Decided with it: the FSRA Q&A is a Regulation node with `kind: guidance`; a breadcrumb, not a status bar; impact spreads 2 links out.
 
-**Scenario.** A small, real request from FSRA's Q&A for insurers (C-02, updated October 14, 2026): FSRA asks insurers to notify it if optional accident benefits are removed or coverage is reduced under a rideshare fleet policy. The exact nodes, questions and end state are written in the demo script before building (`practice/sabs-walkthrough.md`).
+**Status, 2026-11-12: built and live, waiting for you to use it against the exit gate.** Built before the P2 exit gate was judged, by Alireza's choice; that gate stays open.
+
+| Criterion | Result | How it was checked |
+|---|---|---|
+| 1. Loads with the starter template | Pass | Test: the seven departments and seven delivery roles are present, and Start over gives a fresh copy |
+| 2. Request recorded with its trigger | Pass | Test, plus the trigger card asks for that one choice only |
+| 3. Same tags, same impact, each with its path | Pass | Test: identical result with the model in reverse order; every affected node has a path from a tagged node. Departments and teams are shown but not spread through |
+| 4. The 10-second test | Yours to judge | In use |
+| 5. 3 to 5 questions, one at a time, never already answered | Pass | Tests: an answered question does not come back, a "don't know yet" is not asked again in a later request, the limit is 5 |
+| 6. Pending changes, traced, nothing applied early | Pass | Test: the baseline is unchanged until sign-off; every change from an answer links to it. Removing a change brings its question back |
+| 7. Sign-off writes events, the next request sees them, replay reproduces | Pass | End-to-end test of the rideshare request, and the same run driven through the real forms of the running app |
+| 8. One decision per screen | Pass on the automated part | One card is active and takes input; the others are one line. Whether it reads that way is your call |
+| 9. PH-01 rows touched have a status | Pass | ST-01-02 (trigger) and ST-01-08 (affected systems) updated in the register as built |
+
+Known limits: answers can only add things, not change or remove what is already in the model. A signed-off request cannot be undone; Start over gives a clean copy. The questions stop at 5 per request. Anything recorded as "don't know yet" becomes an Issue node with the question in its name.
+
+**Objective.** A basic, working version of the whole loop that you can use freely, not a scripted demo (corrected by Alireza 2026-11-12). On the insurance sample model: request in, impact out, the right questions asked, a proposed change signed off and written back, so the next request starts from the updated model. No AI. Everything in the slice is computed from the graph.
+
+**A first request to try.** Any request works. A good real one, from FSRA's Q&A for insurers (C-02, updated October 14, 2026): FSRA asks insurers to notify it if optional accident benefits are removed or coverage is reduced under a rideshare fleet policy. It is also the end-to-end test fixture.
 
 **Build.**
 - Starter template: the delivery roles and the main departments (design spec section 3, "Start small, grow per request"), added to the sample model. Whatever the scenario needs beyond that is added to the seed by hand.
@@ -167,6 +185,9 @@ Decided by Alireza 2026-11-12, replacing the old P3 (onboarding) and folding in 
 - Structure-derived questions, F-11: 3 to 5, generated from what the taxonomy says is missing on the impacted nodes, one at a time.
 - Proposed future state: each answer becomes a pending change to the model, linked to the request and the answer. Nothing is applied yet.
 - Sign off and write-back, F-21: sign-off applies the pending changes as events. This is the feature that answers the staleness problem.
+- Answers are picks from the model (a role, a system, a step) or "don't know yet" with a note, which is recorded as an Issue. That is how answers become changes without AI.
+- Reset: puts the sample company back, so it can be used freely.
+- Screens follow the screen shape in `design/visual-identity.md`: one page for the request, cards on it, a breadcrumb or status bar. The visual style is refined after the slice works.
 
 **Acceptance criteria.**
 1. The sample model with the starter template loads with no interview and no upload.
@@ -179,7 +200,7 @@ Decided by Alireza 2026-11-12, replacing the old P3 (onboarding) and folding in 
 8. No screen asks for more than one decision and no screen is a form. Checked against DNA/dna.md.
 9. Every PH-01 row in the structure coverage register that the slice touches has a status, and every gap has a decision.
 
-**Exit gate.** The 5-minute demo runs end to end on the rideshare request, and you would use it on a real request.
+**Exit gate.** You have used it on requests of your own, end to end, and the next request picks up what the last one changed. You would use it on a real request.
 
 **Blocked by.** P2 exit gate.
 
@@ -212,7 +233,7 @@ Decided by Alireza 2026-11-12, replacing the old P3 (onboarding) and folding in 
 8. The taxonomy holds the scenario without changes that only make sense for insurance.
 9. Every PH-01 row in the structure coverage register has a status, and every PH-01 gap has a decision.
 
-**Exit gate.** This is the demo. If P4 passes, the product thesis is proven and the rest is execution.
+**Exit gate.** If P4 passes, the product thesis is proven and the rest is execution.
 
 **Blocked by.** P3.
 
